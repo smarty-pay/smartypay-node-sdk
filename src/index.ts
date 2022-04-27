@@ -7,6 +7,8 @@ import {CryptoUtil} from './util/CryptoUtil';
 import {post} from './util/NetUtil';
 import {removeEnd} from './util';
 
+export {CreateInvoiceReq, CreateInvoiceProps, InvoiceData}
+
 
 export const SmartyPayAPI = {
 
