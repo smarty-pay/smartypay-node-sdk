@@ -1,7 +1,7 @@
 const esbuild = require('esbuild');
 const fs = require('fs');
 
-const VERSION = '1.0';
+const VERSION = JSON.parse(fs.readFileSync('package.json')).version;
 
 async function build(){
 
