@@ -2,12 +2,12 @@
  * SMARTy Pay Node SDK
  * @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
  */
-import {CreateInvoiceProps, CreateInvoiceReq, CreateInvoiceResp, InvoiceData} from './types';
+import {CreateInvoiceProps, CreateInvoiceReq, CreateInvoiceResp, InvoiceData, TokenType, InvoiceStatus} from './types';
 import {CryptoUtil} from './util/CryptoUtil';
 import {post} from './util/NetUtil';
 import {removeEnd} from './util';
 
-export {CreateInvoiceReq, CreateInvoiceProps, InvoiceData}
+export {CreateInvoiceReq, CreateInvoiceProps, InvoiceData, TokenType, InvoiceStatus}
 
 
 export const SmartyPayAPI = {
