@@ -1,0 +1,33 @@
+<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>smartypay-node-sdk</title><meta name="description" content="Documentation for smartypay-node-sdk"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">smartypay-node-sdk</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>smartypay-node-sdk </h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#smarty-pay-node-sdk" id="smarty-pay-node-sdk" style="color: inherit; text-decoration: none;">
+  <h1>SMARTy Pay Node SDK</h1>
+</a>
+<p>Simple library for creating invoices on backend side</p>
+
+<a href="#build-steps" id="build-steps" style="color: inherit; text-decoration: none;">
+  <h2>Build steps</h2>
+</a>
+
+<a href="#clone-repository-into-your-dir" id="clone-repository-into-your-dir" style="color: inherit; text-decoration: none;">
+  <h3>Clone repository into your dir</h3>
+</a>
+<pre><code class="language-shell"><span class="hl-0">cd</span><span class="hl-1"> your_dir</span><br/><span class="hl-1">git clone https://github.com/smarty-pay/smartypay-node-sdk</span>
+</code></pre>
+
+<a href="#build" id="build" style="color: inherit; text-decoration: none;">
+  <h3>Build</h3>
+</a>
+<pre><code class="language-shell"><span class="hl-1">npm install</span><br/><span class="hl-1">npm npm run build</span>
+</code></pre>
+
+<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+  <h3>Usage</h3>
+</a>
+<pre><code class="language-js"><span class="hl-2">// make invoice</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">invoice</span><span class="hl-1"> = </span><span class="hl-5">await</span><span class="hl-1"> </span><span class="hl-6">SmartyPayAPI</span><span class="hl-1">.</span><span class="hl-0">createInvoice</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-6">expiresAt:</span><span class="hl-1"> </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-7">Date</span><span class="hl-1">(</span><span class="hl-7">Date</span><span class="hl-1">.</span><span class="hl-0">now</span><span class="hl-1">() + </span><span class="hl-8">1000</span><span class="hl-1"> * </span><span class="hl-8">60</span><span class="hl-1"> * </span><span class="hl-8">60</span><span class="hl-1">), </span><span class="hl-2">// after 1 hour from now</span><br/><span class="hl-1">  </span><span class="hl-6">amount:</span><span class="hl-1"> </span><span class="hl-9">&#39;1.99 bUSDT&#39;</span><span class="hl-1">, </span><span class="hl-2">// see valid tokens here: https://docs.smartypay.io/general/supported-tokens</span><br/><span class="hl-1">}, {</span><br/><span class="hl-1">  </span><span class="hl-6">secretKey:</span><span class="hl-1"> </span><span class="hl-9">&#39;YOUR_SECRET_KEY&#39;</span><span class="hl-1">, </span><span class="hl-2">// you can get it here: https://dashboard.smartypay.io/</span><br/><span class="hl-1">  </span><span class="hl-6">publicKey:</span><span class="hl-1"> </span><span class="hl-9">&#39;YOUR_API_KEY&#39;</span><span class="hl-1">, </span><span class="hl-2">// you can get it here: https://dashboard.smartypay.io/</span><br/><span class="hl-1">});</span>
+</code></pre>
+
+<a href="#full-docs" id="full-docs" style="color: inherit; text-decoration: none;">
+  <h3>Full docs</h3>
+</a>
+<p>Checkout our TypeDocs: <a href="https://smarty-pay.github.io/smartypay-node-sdk/modules.html">https://smarty-pay.github.io/smartypay-node-sdk/modules.html</a></p>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-interface"><a href="interfaces/CreateInvoiceProps.html" class="tsd-kind-icon">Create<wbr/>Invoice<wbr/>Props</a></li><li class="tsd-kind-variable"><a href="modules.html#SmartyPayAPI" class="tsd-kind-icon">Smarty<wbr/>PayAPI</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
