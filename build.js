@@ -1,5 +1,5 @@
 const esbuild = require('esbuild');
-
+const fs = require('fs');
 
 const VERSION = '1.0';
 
@@ -18,6 +18,7 @@ async function build(){
 
 
   // cli
+  const cliDest = `dist/esbuild/smartypay-cli-${VERSION}.js`;
   await esbuild.build({
     logLevel: 'info',
     entryPoints: ['src/cli.ts'],
@@ -25,8 +26,10 @@ async function build(){
     minify: true,
     sourcemap: 'external',
     platform: 'node',
-    outfile: `dist/esbuild/smartypay-cli-${VERSION}.js`,
+    outfile: cliDest,
   });
+
+  fs.copyFileSync(cliDest, 'dist/esbuild/smartypay-cli.js');
 
 }
 

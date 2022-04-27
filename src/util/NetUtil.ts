@@ -35,15 +35,21 @@ export async function post(
 
       const statusCode = res.statusCode;
 
-      if (statusCode && (statusCode < 200 || statusCode > 299)) {
-        return reject(new Error(`HTTP status code ${res.statusCode}`))
-      }
-
       const body: any[] = []
       res.on('data', (chunk) => body.push(chunk))
       res.on('end', () => {
+
         const resString = Buffer.concat(body).toString()
-        resolve(resString)
+
+        if (statusCode && (statusCode < 200 || statusCode > 299)) {
+
+          const error: any = new Error(`HTTP status code ${res.statusCode}`);
+          error.body = resString;
+          reject(error);
+
+        } else {
+          resolve(resString)
+        }
       })
     });
 

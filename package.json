@@ -16,7 +16,8 @@
     "clean": "rm -rf dist build package",
     "docs": "typedoc --entryPoints src/main.ts",
     "build": "npm run clean && npm run esbuild-node",
-    "esbuild-node": "node ./build.js"
+    "esbuild-node": "node ./build.js",
+    "build-run-cli": "npm run esbuild-node && node dist/esbuild/smartypay-cli.js"
   },
   "devDependencies": {
     "@types/jest": "^26.0.21",
