@@ -5,7 +5,28 @@
 
 export interface CreateInvoiceReq {
   expiresAt: Date,
-  amount: string,
+  amount: number | string,
+  token: TokenType,
+}
+
+export type TokenType =
+  // binance
+  'bBUSD'
+  | 'bUSDT'
+  | 'btMNXe'
+  | 'btBUSD'
+  // polygon
+  | 'pUSDC'
+  | 'pUSDT'
+  | 'pmUSDC'
+  | 'pmUSDT'
+  ;
+
+export interface CreateInvoiceProps {
+  publicKey: string,
+  secretKey: string,
+  timeout?: number,
+  host?: string,
 }
 
 export interface CreateInvoiceResp {

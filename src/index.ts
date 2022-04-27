@@ -2,21 +2,17 @@
  * SMARTy Pay Node SDK
  * @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
  */
-import {CreateInvoiceReq, CreateInvoiceResp, InvoiceData} from './types';
+import {CreateInvoiceProps, CreateInvoiceReq, CreateInvoiceResp, InvoiceData} from './types';
 import {CryptoUtil} from './util/CryptoUtil';
 import {post} from './util/NetUtil';
 import {removeEnd} from './util';
 
 
-export interface CreateInvoiceProps {
-  publicKey: string,
-  secretKey: string,
-  timeout?: number,
-  host?: string,
-}
-
 export const SmartyPayAPI = {
 
+  /**
+   * Create invoice
+   */
   async createInvoice(
     data: CreateInvoiceReq,
     {
@@ -31,7 +27,7 @@ export const SmartyPayAPI = {
 
     const body = JSON.stringify({
       expiresAt: data.expiresAt.toISOString(),
-      amount: data.amount,
+      amount: `${data.amount} ${data.token}`,
     });
 
     const messageToSign = ts + 'POST/integration/invoices' + body;
