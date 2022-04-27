@@ -14,7 +14,7 @@
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest --passWithNoTests",
     "clean": "rm -rf dist build package",
-    "docs": "typedoc --entryPoints src/main.ts",
+    "docs": "typedoc --entryPoints src/index.ts",
     "build": "npm run clean && npm run esbuild-node",
     "esbuild-node": "node ./build.js",
     "build-run-cli": "npm run esbuild-node && node dist/esbuild/smartypay-cli.js"

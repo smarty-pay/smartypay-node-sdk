@@ -1,3 +1,7 @@
+/**
+ * SMARTy Pay Node SDK
+ * @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+ */
 import https from 'https';
 import http from 'http';
 

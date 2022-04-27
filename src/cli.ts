@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+/**
+ * SMARTy Pay Node SDK
+ * @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+ */
 import {SmartyPayAPI} from './index';
 
 type StateType = 'unknown'
