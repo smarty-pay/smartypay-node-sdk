@@ -43,5 +43,5 @@ git clone https://github.com/smarty-pay/smartypay-node-sdk
 ### Build
 ```shell
 npm install
-npm npm run build
+npm run build
 ```
