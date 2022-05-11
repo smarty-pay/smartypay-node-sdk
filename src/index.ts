@@ -13,7 +13,8 @@ export {CreateInvoiceReq, CreateInvoiceProps, InvoiceData, TokenType, InvoiceSta
 export const SmartyPayAPI = {
 
   /**
-   * Create invoice
+   * Create invoice.
+   * [Docs](https://docs.smartypay.io/general/authentication#create-invoice-with-signature)
    */
   async createInvoice(
     data: CreateInvoiceReq,
@@ -50,6 +51,22 @@ export const SmartyPayAPI = {
     const {invoice} = JSON.parse(resp) as CreateInvoiceResp;
 
     return invoice;
+  },
+
+  /**
+   * Get Sha256 signature.
+   * [Docs](https://docs.smartypay.io/api/webhooks)
+   */
+  getMessageSignature(message: string, secretKey: string): string {
+    return CryptoUtil.hmacSha256Hex(secretKey, message);
+  },
+
+  /**
+   * Check Sha256 signature.
+   * [Docs](https://docs.smartypay.io/api/webhooks)
+   */
+  isValidSignature(message: string, signature: string, secretKey: string): boolean {
+    return SmartyPayAPI.getMessageSignature(message, secretKey) === signature;
   }
 
 }
