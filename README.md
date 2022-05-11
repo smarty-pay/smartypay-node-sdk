@@ -7,6 +7,11 @@ npm i smartypay-node-sdk
 ```
 
 ## Usage
+
+### Create invoice
+
+[See docs](https://docs.smartypay.io/general/authentication#signing-requests)
+
 ```typescript
 async function createInvoice() {
   
@@ -29,6 +34,21 @@ async function createInvoice() {
 - **token** - see valid tokens here: https://docs.smartypay.io/general/supported-tokens
 - **secretKey** - you can get it here: https://dashboard.smartypay.io/
 - **publicKey** - you can get it here: https://dashboard.smartypay.io/
+
+### Check webhook signature
+
+[See docs](https://docs.smartypay.io/api/webhooks)
+
+```typescript
+function isValidWebhook( resp: Respone){
+
+  // See: https://docs.smartypay.io/api/webhooks
+  const body: string = resp.body;
+  const signature: string = resp.heades['x-api-digest'];
+  
+  return SmartyPayAPI.isValidSignature(body,  signature, 'YOUR_SECRET_KEY');
+}
+```
 
 ## Full API docs
 Checkout our [TypeDocs](https://smarty-pay.github.io/smartypay-node-sdk/modules.html)
