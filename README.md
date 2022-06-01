@@ -13,6 +13,8 @@ npm i smartypay-node-sdk
 [See docs](https://docs.smartypay.io/general/authentication#signing-requests)
 
 ```typescript
+import {SmartyPayAPI} from 'smartypay-node-sdk';
+
 async function createInvoice() {
   
   // call API 
