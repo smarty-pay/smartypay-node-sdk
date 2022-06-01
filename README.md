@@ -27,7 +27,19 @@ async function createInvoice() {
   });
   
   // result invoice id
-  return invoice.id;
+  const invoiceId = invoice.id;
+    
+  // params to open invoice
+  const params = new URLSearchParams();
+  params.set('invoice-id', invoiceId);
+    
+  // additional params:
+  // params.set('name', 'Item Name to Buy');
+  // params.set('success-url', 'https://...');
+  // params.set('fail-url', 'https://...');
+
+  // final url be like "https://checkout.smartypay.io/invoice?invoice-id=XXXXXXX"
+  const urlToRedirect = 'https://checkout.smartypay.io/invoice?' + params.toString();
 }
 ```
 - **expiresAt** - date before invoice is active
