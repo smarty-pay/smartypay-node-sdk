@@ -7,6 +7,7 @@ export interface CreateInvoiceReq {
   expiresAt: Date,
   amount: number | string,
   token: TokenType,
+  metadata?: string | Record<string, any>,
 }
 
 export type TokenType =

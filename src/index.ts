@@ -5,7 +5,7 @@
 import {CreateInvoiceProps, CreateInvoiceReq, CreateInvoiceResp, InvoiceData, TokenType, InvoiceStatus} from './types';
 import {CryptoUtil} from './util/CryptoUtil';
 import {post} from './util/NetUtil';
-import {removeEnd} from './util';
+import {isString, removeEnd} from './util';
 
 export {CreateInvoiceReq, CreateInvoiceProps, InvoiceData, TokenType, InvoiceStatus}
 
@@ -28,11 +28,16 @@ export const SmartyPayAPI = {
     const now = Date.now();
     const ts = Math.round(now / 1000).toString();
 
-    const body = JSON.stringify({
+    const bodyData: any = {
       expiresAt: data.expiresAt.toISOString(),
       amount: `${data.amount} ${data.token}`,
-    });
+    }
 
+    if(data.metadata){
+      bodyData.metadata = isString(data.metadata)? data.metadata : JSON.stringify(data.metadata);
+    }
+
+    const body = JSON.stringify(bodyData);
     const messageToSign = ts + 'POST/integration/invoices' + body;
     const sig = CryptoUtil.hmacSha256Hex(secretKey, messageToSign);
     const targetHost = removeEnd(host || 'https://api.smartypay.io', '/');

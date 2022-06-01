@@ -10,3 +10,7 @@ export function removeEnd(str: string, last: string): string {
 
   return str.substring(0, str.length - last.length);
 }
+
+export function isString(obj: any){
+  return obj !== null && obj !== undefined && typeof obj === 'string';
+}

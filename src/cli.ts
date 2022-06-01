@@ -16,7 +16,8 @@ type InvoiceKey = 'amount'
   | 'token'
   | 'expiresAt'
   | 'publicKey'
-  | 'secretKey';
+  | 'secretKey'
+  | 'metadata';
 
 
 const NextLineInput = '\ncli: ';
@@ -85,6 +86,7 @@ function processUnknownState(input: string){
       expiresAt: undefined,
       publicKey: undefined,
       secretKey: undefined,
+      metadata: undefined,
     }
 
     processInvoiceReq();
@@ -145,6 +147,7 @@ async function createInvoice(){
       expiresAt: new Date(invoiceReq.expiresAt!),
       amount: invoiceReq.amount!,
       token: invoiceReq.token! as TokenType,
+      metadata: invoiceReq.metadata,
     }, {
       secretKey: invoiceReq.secretKey!,
       publicKey: invoiceReq.publicKey!

@@ -19,7 +19,8 @@ async function createInvoice() {
   const invoice = await SmartyPayAPI.createInvoice({
     expiresAt: new Date(Date.now() + 1000 * 60 * 60), // after 1 hour from now
     amount: '1.99',
-    token: 'bUSDT'
+    token: 'bUSDT',
+    metadata: 'YOUR_PURCHASE_ID' // optional
   }, {
     secretKey: 'YOUR_SECRET_KEY',
     publicKey: 'YOUR_API_KEY',
@@ -32,6 +33,7 @@ async function createInvoice() {
 - **expiresAt** - date before invoice is active
 - **amount** - amount for invoice (example 0.99)
 - **token** - see valid tokens here: https://docs.smartypay.io/general/supported-tokens
+- **metadata** - optional field for any custom metadata (usually it's your own purchase id for success webhook)
 - **secretKey** - you can get it here: https://dashboard.smartypay.io/
 - **publicKey** - you can get it here: https://dashboard.smartypay.io/
 
