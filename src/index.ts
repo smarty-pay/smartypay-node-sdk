@@ -9,7 +9,7 @@ import {
   InvoiceData,
   TokenType,
   InvoiceStatus,
-  CreatePushAddressReq, CreatePushAddressResp, TokensInfo
+  CreatePushAddressReq, CreatePushAddressResp
 } from './types';
 import {CryptoUtil} from './util/CryptoUtil';
 import {post} from './util/NetUtil';
@@ -54,8 +54,7 @@ export const SmartyPayAPI = {
 
     const bodyData: any = {
       cid: data.customerId,
-      token: TokensInfo[data.token].address,
-      blockchain: TokensInfo[data.token].blockchain,
+      token: data.token,
     }
 
     return await postSignReq<CreatePushAddressResp>(
