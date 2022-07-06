@@ -10,6 +10,11 @@ export interface CreateInvoiceReq {
   metadata?: string | Record<string, any>,
 }
 
+export interface CreatePushAddressReq {
+  customerId: string,
+  token: TokenType,
+}
+
 export type TokenType =
   // binance
   'bBUSD'
@@ -23,16 +28,24 @@ export type TokenType =
   | 'pmUSDT'
   ;
 
-export interface CreateInvoiceProps {
+export interface SignReqProps {
   publicKey: string,
   secretKey: string,
   timeout?: number,
   host?: string,
 }
 
+
+
 export interface CreateInvoiceResp {
   invoice: InvoiceData,
 }
+
+export interface CreatePushAddressResp {
+  address: string,
+  token: string,
+}
+
 
 export interface InvoiceData {
   id: string,

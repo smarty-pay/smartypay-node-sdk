@@ -51,6 +51,34 @@ async function createInvoice() {
 - **secretKey** - you can get it here: https://dashboard.smartypay.io/
 - **publicKey** - you can get it here: https://dashboard.smartypay.io/
 
+
+### Create client's push-address
+
+[See docs](https://docs.smartypay.io/api/push-payments)
+
+```typescript
+import {SmartyPayAPI} from 'smartypay-node-sdk';
+
+async function createPushAddress(customerId: string) {
+  
+  // call API
+  const resp = await SmartyPayAPI.createPushAddress({
+    token: 'bUSDT',
+    customerId: customerId,
+  }, {
+    secretKey: 'YOUR_SECRET_KEY',
+    publicKey: 'YOUR_API_KEY',
+  });
+  
+  // push address for your customerId
+  const pushAddress = resp.address;
+}
+```
+- **token** - see valid tokens here: https://docs.smartypay.io/general/supported-tokens
+- **customerId** - customer's id from your own system
+- **secretKey** - you can get it here: https://dashboard.smartypay.io/
+- **publicKey** - you can get it here: https://dashboard.smartypay.io/
+
 ### Check webhook signature
 
 [See docs](https://docs.smartypay.io/api/webhooks)
