@@ -23,6 +23,10 @@ export {
   Currency,
   InvoiceStatus,
   Network,
+  SubscriptionPlan,
+  Subscription,
+  SubscriptionId,
+  SubscriptionCharge,
 }
 
 
