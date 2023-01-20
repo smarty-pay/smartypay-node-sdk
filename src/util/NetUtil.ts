@@ -117,6 +117,13 @@ export async function request(
 
           const error: any = new Error(`HTTP status code ${res.statusCode}`);
           error.body = resString;
+
+          try {
+            error.body = JSON.parse(resString);
+          } catch (e){
+            // skip
+          }
+
           reject(error);
 
         } else {

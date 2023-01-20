@@ -56,6 +56,27 @@ describe('SmartyPayAPI', ()=>{
         expect(subs[0].payer).toBe(payerAddress);
       }
     });
+
+    test('createSubscription', async ()=>{
+      try {
+
+        const resp = await api.createSubscription({
+          planId: 'BAD_PLAN_ID',
+          payer: payerAddress,
+          customerId: 'some',
+          metadata: 'some',
+        }, signProps);
+
+        console.log('unexpected resp', resp);
+        throw new Error('exception expected');
+      } catch (e){
+
+        expect(e.body).not.toBeUndefined();
+        expect(e.body.status).toBe(400);
+        expect(e.body.code).toBe('BadRequest');
+        expect(e.body.message).toBe('Invalid value for: body');
+      }
+    })
   })
 
 

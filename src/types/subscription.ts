@@ -15,6 +15,15 @@ export interface GetSubscriptionsByPayerResp {
 }
 
 
+export interface CreateSubscriptionReq {
+  planId: string,
+  payer: string,
+  customerId: string,
+  metadata?: string,
+  startFrom?: Date|string|number,
+}
+
+
 export interface SubscriptionPlan {
   id: string,
   companyId: number,
@@ -40,7 +49,7 @@ export interface Subscription {
   nextChargeAt: string,
   payer: string,
   createdAt: string,
-  metadata: string,
+  metadata?: string,
   status: SubscriptionStatus,
 }
 

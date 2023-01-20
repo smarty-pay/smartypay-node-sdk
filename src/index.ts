@@ -8,7 +8,13 @@ import {get, post} from './util/NetUtil';
 import {isString, removeEnd} from './util';
 import {CreateInvoiceReq, CreateInvoiceResp, InvoiceData, InvoiceStatus} from './types/invoice';
 import {CreateRechargeAddressReq, CreateRechargeAddressResp} from './types/recharge';
-import {GetActivePlansResp, GetSubscriptionsByPayerResp, Subscription, SubscriptionPlan} from './types/subscription';
+import {
+  CreateSubscriptionReq,
+  GetActivePlansResp,
+  GetSubscriptionsByPayerResp,
+  Subscription,
+  SubscriptionPlan
+} from './types/subscription';
 
 export {
   CreateInvoiceReq,
@@ -42,6 +48,29 @@ export const SmartyPaySubscriptions = {
       signProps,
     );
     return subscriptions;
+  },
+
+  /**
+   * Create subscription for payer
+   */
+  async createSubscription(
+    req: CreateSubscriptionReq,
+    signProps: SignReqProps
+  ): Promise<Subscription> {
+
+    const startFrom: Date = req.startFrom? new Date(req.startFrom) : new Date();
+
+    return await postSignReq<Subscription>(
+      '/integration/subscriptions',
+      {
+        planId: req.planId,
+        payer: req.payer,
+        customerId: req.customerId,
+        metadata: req.metadata,
+        startFrom: startFrom.toISOString(),
+      },
+      signProps
+    );
   }
 
 
