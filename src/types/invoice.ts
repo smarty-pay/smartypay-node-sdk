@@ -1,49 +1,21 @@
 /**
  * SMARTy Pay Node SDK
- * @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+ * @author Evgeny Dolganov <e.dolganov@smartypay.io>
  */
+
+import {Currency} from './index';
+
 
 export interface CreateInvoiceReq {
   expiresAt: Date,
   amount: number | string,
-  token: TokenType,
+  token: Currency,
   metadata?: string | Record<string, any>,
 }
-
-export interface CreatePushAddressReq {
-  customerId: string,
-  token: TokenType,
-}
-
-export type TokenType =
-  // binance
-  'bBUSD'
-  | 'bUSDT'
-  | 'btMNXe'
-  | 'btBUSD'
-  // polygon
-  | 'pUSDC'
-  | 'pUSDT'
-  | 'pmUSDC'
-  | 'pmUSDT'
-  ;
-
-export interface SignReqProps {
-  publicKey: string,
-  secretKey: string,
-  timeout?: number,
-  host?: string,
-}
-
 
 
 export interface CreateInvoiceResp {
   invoice: InvoiceData,
-}
-
-export interface CreatePushAddressResp {
-  address: string,
-  token: string,
 }
 
 
@@ -62,6 +34,7 @@ export interface InvoiceData {
   createdAtBlock: number,
   auxAmounts: string[],
 }
+
 
 export type InvoiceStatus =
   'Created'

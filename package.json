@@ -1,8 +1,8 @@
 {
   "name": "smartypay-node-sdk",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Simple library for creating invoices on backend side",
-  "author": "Evgeny Dolganov <evgenij.dolganov@gmail.com>",
+  "author": "Evgeny Dolganov <e.dolganov@smartypay.io>",
   "repository": "https://github.com/smarty-pay/smartypay-node-sdk",
   "license": "MIT",
   "keywords": [

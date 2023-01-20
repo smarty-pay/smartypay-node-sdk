@@ -2,10 +2,10 @@
 
 /**
  * SMARTy Pay Node SDK
- * @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+ * @author Evgeny Dolganov <e.dolganov@smartypay.io>
  */
 import {SmartyPayAPI} from './index';
-import {TokenType} from './types';
+import {Currency} from './types';
 
 type StateType = 'unknown'
   | 'invoice-wait-data'
@@ -143,14 +143,19 @@ async function createInvoice(){
 
   inProgress = true;
   try {
-    const result = await SmartyPayAPI.createInvoice({
-      expiresAt: new Date(invoiceReq.expiresAt!),
-      amount: invoiceReq.amount!,
-      token: invoiceReq.token! as TokenType,
-      metadata: invoiceReq.metadata,
-    }, {
+
+    const cred = {
       secretKey: invoiceReq.secretKey!,
       publicKey: invoiceReq.publicKey!
+    };
+
+    const api = new SmartyPayAPI(cred);
+
+    const result = await api.invoices.createInvoice({
+      expiresAt: new Date(invoiceReq.expiresAt!),
+      amount: invoiceReq.amount!,
+      token: invoiceReq.token! as Currency,
+      metadata: invoiceReq.metadata,
     });
 
     state = 'unknown';
