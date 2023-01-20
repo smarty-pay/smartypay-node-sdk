@@ -26,37 +26,36 @@ export {
 }
 
 
-export const SmartyPaySubscriptions = {
+export class SmartyPaySubscriptions {
+
+  constructor(private readonly signProps: SignReqProps) {}
 
   /**
    * Get active subscriptions plans
    */
-  async getActivePlans(signProps: SignReqProps): Promise<SubscriptionPlan[]> {
+  async getActivePlans(): Promise<SubscriptionPlan[]> {
     const {plans} = await getSignReq<GetActivePlansResp>(
       '/integration/subscription-plans',
-      signProps
+      this.signProps
     );
     return plans;
-  },
+  }
 
   /**
    * Get exists subscriptions for payer address
    */
-  async getSubscriptionsByPayer(payerAddress: string, signProps: SignReqProps): Promise<Subscription[]> {
+  async getSubscriptionsByPayer(payerAddress: string): Promise<Subscription[]> {
     const {subscriptions} = await getSignReq<GetSubscriptionsByPayerResp>(
       `/integration/subscriptions?payer=${payerAddress}`,
-      signProps,
+      this.signProps,
     );
     return subscriptions;
-  },
+  }
 
   /**
    * Create subscription for payer
    */
-  async createSubscription(
-    req: CreateSubscriptionReq,
-    signProps: SignReqProps
-  ): Promise<Subscription> {
+  async createSubscription(req: CreateSubscriptionReq): Promise<Subscription> {
 
     const startFrom: Date = req.startFrom? new Date(req.startFrom) : new Date();
 
@@ -69,7 +68,7 @@ export const SmartyPaySubscriptions = {
         metadata: req.metadata,
         startFrom: startFrom.toISOString(),
       },
-      signProps
+      this.signProps
     );
   }
 
@@ -77,16 +76,15 @@ export const SmartyPaySubscriptions = {
 }
 
 
-export const SmartyPayInvoices = {
+export class SmartyPayInvoices {
+
+  constructor(private readonly signProps: SignReqProps) {}
 
   /**
    * Create invoice.
    * [Docs](https://docs.smartypay.io/general/authentication#create-invoice-with-signature)
    */
-  async createInvoice(
-    data: CreateInvoiceReq,
-    signProps: SignReqProps
-  ): Promise<InvoiceData> {
+  async createInvoice(data: CreateInvoiceReq): Promise<InvoiceData> {
 
     const bodyData: any = {
       expiresAt: data.expiresAt.toISOString(),
@@ -100,20 +98,19 @@ export const SmartyPayInvoices = {
     const {invoice} = await postSignReq<CreateInvoiceResp>(
       '/integration/invoices',
       bodyData,
-      signProps
+      this.signProps
     );
 
     return invoice;
-  },
+  }
 
 }
 
-export const SmartyPayRecharges = {
+export class SmartyPayRecharges {
 
-  async createRechargeAddress(
-    data: CreateRechargeAddressReq,
-    signProps: SignReqProps
-  ): Promise<CreateRechargeAddressResp>{
+  constructor(private readonly signProps: SignReqProps) {}
+
+  async createRechargeAddress(data: CreateRechargeAddressReq,): Promise<CreateRechargeAddressResp>{
 
     const bodyData: any = {
       cid: data.customerId,
@@ -123,9 +120,9 @@ export const SmartyPayRecharges = {
     return await postSignReq<CreateRechargeAddressResp>(
       '/integration/push-addresses',
       bodyData,
-      signProps
+      this.signProps
     );
-  },
+  }
 }
 
 export const SmartyPayUtils = {
@@ -148,17 +145,19 @@ export const SmartyPayUtils = {
 
 }
 
-export const SmartyPayAPI = {
-  invoices: {
-    ...SmartyPayInvoices
-  },
-  subscriptions: {
-    ...SmartyPaySubscriptions
-  },
-  recharges:{
-    ...SmartyPayRecharges
-  },
-  utils: {
+export class SmartyPayAPI {
+
+  public readonly invoices: SmartyPayInvoices;
+  public readonly subscriptions: SmartyPaySubscriptions;
+  public readonly recharges: SmartyPayRecharges;
+
+  constructor(signProps: SignReqProps) {
+    this.invoices = new SmartyPayInvoices(signProps);
+    this.subscriptions = new SmartyPaySubscriptions(signProps);
+    this.recharges = new SmartyPayRecharges(signProps);
+  }
+
+  static readonly utils = {
     ...SmartyPayUtils
   }
 }

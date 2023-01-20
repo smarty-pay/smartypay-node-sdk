@@ -143,14 +143,19 @@ async function createInvoice(){
 
   inProgress = true;
   try {
-    const result = await SmartyPayAPI.invoices.createInvoice({
+
+    const cred = {
+      secretKey: invoiceReq.secretKey!,
+      publicKey: invoiceReq.publicKey!
+    };
+
+    const api = new SmartyPayAPI(cred);
+
+    const result = await api.invoices.createInvoice({
       expiresAt: new Date(invoiceReq.expiresAt!),
       amount: invoiceReq.amount!,
       token: invoiceReq.token! as Currency,
       metadata: invoiceReq.metadata,
-    }, {
-      secretKey: invoiceReq.secretKey!,
-      publicKey: invoiceReq.publicKey!
     });
 
     state = 'unknown';

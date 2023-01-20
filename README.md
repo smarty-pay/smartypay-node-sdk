@@ -18,14 +18,16 @@ import {SmartyPayAPI} from 'smartypay-node-sdk';
 async function createInvoice() {
   
   // call API 
-  const invoice = await SmartyPayAPI.invoices.createInvoice({
+  const api = new SmartyPayAPI({
+    secretKey: 'YOUR_SECRET_KEY',
+    publicKey: 'YOUR_API_KEY',
+  });
+  
+  const invoice = await api.invoices.createInvoice({
     expiresAt: new Date(Date.now() + 1000 * 60 * 60), // after 1 hour from now
     amount: '1.99',
     token: 'bUSDT',
     metadata: 'YOUR_PURCHASE_ID' // optional
-  }, {
-    secretKey: 'YOUR_SECRET_KEY',
-    publicKey: 'YOUR_API_KEY',
   });
   
   // result invoice id
@@ -62,12 +64,14 @@ import {SmartyPayAPI} from 'smartypay-node-sdk';
 async function createRechargeAddress(customerId: string) {
   
   // call API
-  const resp = await SmartyPayAPI.recharges.createRechargeAddress({
-    token: 'bUSDT',
-    customerId: customerId,
-  }, {
+  const api = new SmartyPayAPI({
     secretKey: 'YOUR_SECRET_KEY',
     publicKey: 'YOUR_API_KEY',
+  });
+  
+  const resp = await api.recharges.createRechargeAddress({
+    token: 'bUSDT',
+    customerId: customerId,
   });
   
   // recharge address for your customerId

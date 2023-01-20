@@ -33,24 +33,25 @@ describe('SmartyPayAPI', ()=>{
 
   describe('subscriptions', ()=>{
 
-    const api = SmartyPayAPI.subscriptions;
-
     const signProps: SignReqProps = {
       host: 'https://ncps-api.staging.mnxsc.tech',
       publicKey: 's5FGH1xnRMs6WGPEFX9oIlxYDYEYX4Sg',
       secretKey: 'ltbUjBfqXqwJLf3hToVTTvHho5YRaR3SnL2Dh20x3P3f0A462gmMlUa4pfYq1ScM',
     };
 
+    const api = new SmartyPayAPI(signProps).subscriptions;
+
+
     const payerAddress = '0x14186C8215985f33845722730c6382443Bf9EC65';
 
     test('getSubscriptionPlans', async () => {
-      const plans = await api.getActivePlans(signProps);
+      const plans = await api.getActivePlans();
       expect(plans).not.toBeUndefined();
       expect(plans.length).toBeGreaterThan(0);
     });
 
     test('getSubscriptionsByPayer', async ()=>{
-      const subs = await api.getSubscriptionsByPayer(payerAddress, signProps);
+      const subs = await api.getSubscriptionsByPayer(payerAddress);
       expect(subs).not.toBeUndefined();
       if(subs.length > 0){
         expect(subs[0].payer).toBe(payerAddress);
@@ -65,7 +66,7 @@ describe('SmartyPayAPI', ()=>{
           payer: payerAddress,
           customerId: 'some',
           metadata: 'some',
-        }, signProps);
+        });
 
         console.log('unexpected resp', resp);
         throw new Error('exception expected');
