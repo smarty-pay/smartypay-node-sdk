@@ -18,7 +18,7 @@ import {SmartyPayAPI} from 'smartypay-node-sdk';
 async function createInvoice() {
   
   // call API 
-  const invoice = await SmartyPayAPI.createInvoice({
+  const invoice = await SmartyPayAPI.invoices.createInvoice({
     expiresAt: new Date(Date.now() + 1000 * 60 * 60), // after 1 hour from now
     amount: '1.99',
     token: 'bUSDT',
@@ -52,17 +52,17 @@ async function createInvoice() {
 - **publicKey** - you can get it here: https://dashboard.smartypay.io/
 
 
-### Create client's push-address
+### Create client's recharge address
 
-[See docs](https://docs.smartypay.io/api/push-payments)
+[See docs](https://docs.smartypay.io/api/recharge-payments)
 
 ```typescript
 import {SmartyPayAPI} from 'smartypay-node-sdk';
 
-async function createPushAddress(customerId: string) {
+async function createRechargeAddress(customerId: string) {
   
   // call API
-  const resp = await SmartyPayAPI.createPushAddress({
+  const resp = await SmartyPayAPI.recharges.createRechargeAddress({
     token: 'bUSDT',
     customerId: customerId,
   }, {
@@ -70,8 +70,8 @@ async function createPushAddress(customerId: string) {
     publicKey: 'YOUR_API_KEY',
   });
   
-  // push address for your customerId
-  const pushAddress = resp.address;
+  // recharge address for your customerId
+  const rechargeAddress = resp.address;
 }
 ```
 - **token** - see valid tokens here: https://docs.smartypay.io/general/supported-tokens
@@ -90,7 +90,7 @@ function isValidWebhook( resp: Respone){
   const body: string = resp.body;
   const signature: string = resp.heades['x-api-digest'];
   
-  return SmartyPayAPI.isValidSignature(body,  signature, 'YOUR_SECRET_KEY');
+  return SmartyPayAPI.utils.isValidSignature(body,  signature, 'YOUR_SECRET_KEY');
 }
 ```
 

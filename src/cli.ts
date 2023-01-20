@@ -5,7 +5,7 @@
  * @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
  */
 import {SmartyPayAPI} from './index';
-import {TokenType} from './types';
+import {Currency} from './types';
 
 type StateType = 'unknown'
   | 'invoice-wait-data'
@@ -143,10 +143,10 @@ async function createInvoice(){
 
   inProgress = true;
   try {
-    const result = await SmartyPayAPI.createInvoice({
+    const result = await SmartyPayAPI.invoices.createInvoice({
       expiresAt: new Date(invoiceReq.expiresAt!),
       amount: invoiceReq.amount!,
-      token: invoiceReq.token! as TokenType,
+      token: invoiceReq.token! as Currency,
       metadata: invoiceReq.metadata,
     }, {
       secretKey: invoiceReq.secretKey!,

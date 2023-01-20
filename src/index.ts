@@ -2,23 +2,39 @@
  * SMARTy Pay Node SDK
  * @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
  */
-import {
-  SignReqProps,
-  CreateInvoiceReq,
-  CreateInvoiceResp,
-  InvoiceData,
-  TokenType,
-  InvoiceStatus,
-  CreatePushAddressReq, CreatePushAddressResp
-} from './types';
+import {Currency, Network, SignReqProps,} from './types';
 import {CryptoUtil} from './util/CryptoUtil';
-import {post} from './util/NetUtil';
+import {get, post} from './util/NetUtil';
 import {isString, removeEnd} from './util';
+import {CreateInvoiceReq, CreateInvoiceResp, InvoiceData, InvoiceStatus} from './types/invoice';
+import {CreateRechargeAddressReq, CreateRechargeAddressResp} from './types/recharge';
+import {GetActivePlansResp, SubscriptionPlan} from './types/subscription';
 
-export {CreateInvoiceReq, SignReqProps, InvoiceData, TokenType, InvoiceStatus}
+export {
+  CreateInvoiceReq,
+  SignReqProps,
+  InvoiceData,
+  Currency,
+  InvoiceStatus,
+  Network,
+}
 
 
-export const SmartyPayAPI = {
+export const SmartyPaySubscriptions = {
+
+  async getActivePlans(
+    signProps: SignReqProps
+  ): Promise<SubscriptionPlan[]> {
+    const {plans} = await getSignReq<GetActivePlansResp>(
+      '/integration/subscription-plans',
+      signProps
+    );
+    return plans;
+  },
+}
+
+
+export const SmartyPayInvoices = {
 
   /**
    * Create invoice.
@@ -47,22 +63,29 @@ export const SmartyPayAPI = {
     return invoice;
   },
 
-  async createPushAddress(
-    data: CreatePushAddressReq,
+}
+
+export const SmartyPayRecharges = {
+
+  async createRechargeAddress(
+    data: CreateRechargeAddressReq,
     signProps: SignReqProps
-  ): Promise<CreatePushAddressResp>{
+  ): Promise<CreateRechargeAddressResp>{
 
     const bodyData: any = {
       cid: data.customerId,
       token: data.token,
     }
 
-    return await postSignReq<CreatePushAddressResp>(
+    return await postSignReq<CreateRechargeAddressResp>(
       '/integration/push-addresses',
       bodyData,
       signProps
     );
   },
+}
+
+export const SmartyPayUtils = {
 
   /**
    * Get Sha256 signature.
@@ -77,9 +100,24 @@ export const SmartyPayAPI = {
    * [Docs](https://docs.smartypay.io/api/webhooks)
    */
   isValidSignature(message: string, signature: string, secretKey: string): boolean {
-    return SmartyPayAPI.getMessageSignature(message, secretKey) === signature;
+    return SmartyPayUtils.getMessageSignature(message, secretKey) === signature;
   }
 
+}
+
+export const SmartyPayAPI = {
+  invoices: {
+    ...SmartyPayInvoices
+  },
+  subscriptions: {
+    ...SmartyPaySubscriptions
+  },
+  recharges:{
+    ...SmartyPayRecharges
+  },
+  utils: {
+    ...SmartyPayUtils
+  }
 }
 
 
@@ -102,6 +140,38 @@ async function postSignReq<T>(
   const targetHost = removeEnd(host || 'https://api.smartypay.io', '/');
 
   const resp = await post(`${targetHost}${apiPath}`, body, {
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'x-api-key': publicKey,
+      'x-api-sig': sig,
+      'x-api-ts': ts,
+    },
+    timeout,
+  });
+
+  return JSON.parse(resp) as T;
+}
+
+
+
+async function getSignReq<T>(
+  apiPath: string,
+  {
+    secretKey,
+    publicKey,
+    timeout,
+    host,
+  }: SignReqProps
+): Promise<T> {
+
+  const now = Date.now();
+  const ts = Math.round(now / 1000).toString();
+  const messageToSign = ts + `GET${apiPath}`;
+  const sig = CryptoUtil.hmacSha256Hex(secretKey, messageToSign);
+  const targetHost = removeEnd(host || 'https://api.smartypay.io', '/');
+
+  const resp = await get(`${targetHost}${apiPath}`, undefined, {
     headers: {
       'accept': 'application/json',
       'content-type': 'application/json',

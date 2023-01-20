@@ -4,6 +4,7 @@
  */
 import https from 'https';
 import http from 'http';
+import {URLSearchParams} from 'url';
 
 export interface CallProps {
   timeout?: number,
@@ -18,16 +19,83 @@ export async function post(
     headers,
   }: CallProps): Promise<string> {
 
-  const dataString = typeof data === 'string'? data : JSON.stringify(data)
+  const dataString = typeof data === 'string'? data : JSON.stringify(data);
+
+  return request(
+    'POST',
+    url,
+    dataString,
+    {
+      timeout,
+      headers: {
+        ...headers,
+        'content-type': 'application/json',
+      }
+    }
+  );
+}
+
+
+export async function get(
+  url: string,
+  queryParams: Record<string, any> | undefined,
+  {
+    timeout,
+    headers,
+  }: CallProps): Promise<string> {
+
+  let callUrl = url;
+  if(queryParams){
+
+    const urlParams = new URLSearchParams();
+    Object.entries(queryParams).forEach(([key, value])=>{
+      urlParams.set(key, value.toString());
+    });
+
+    if(url.includes('?')){
+      callUrl = `${callUrl}&${urlParams.toString()}`;
+    } else {
+      callUrl = `${callUrl}?${urlParams.toString()}`;
+    }
+  }
+
+  return request(
+    'GET',
+    callUrl,
+    undefined,
+    {
+      timeout,
+      headers: {
+        ...headers,
+        'content-type': 'application/json',
+      }
+    }
+  );
+}
+
+
+
+export async function request(
+  method: string,
+  url: string,
+  reqBody: string|undefined,
+  {
+    timeout,
+    headers,
+  }: CallProps): Promise<string> {
+
+  const sendHeaders = {
+    ...(headers || {}),
+  };
+
+  if(reqBody){
+    sendHeaders['content-length'] = reqBody.length;
+  }
 
   const options = {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'content-length': dataString.length,
-      ...(headers || {}),
-    },
-    timeout: timeout || 5000, // in ms
+    method,
+    headers: sendHeaders,
+    timeout: timeout || 10_000, // in ms
   }
 
   return new Promise((resolve, reject) => {
@@ -52,21 +120,24 @@ export async function post(
           reject(error);
 
         } else {
-          resolve(resString)
+          resolve(resString);
         }
       })
     });
 
     req.on('error', (err) => {
-      reject(err)
+      reject(err);
     })
 
     req.on('timeout', () => {
-      req.destroy()
-      reject(new Error('Request time out'))
+      req.destroy();
+      reject(new Error('Request time out'));
     })
 
-    req.write(dataString)
-    req.end()
+    if(reqBody) {
+      req.write(reqBody);
+    }
+
+    req.end();
   })
 }
