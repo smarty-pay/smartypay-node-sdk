@@ -34,7 +34,7 @@ describe('SmartyPayAPI', ()=>{
   describe('subscriptions', ()=>{
 
     const signProps: SignReqProps = {
-      host: 'https://ncps-api.staging.mnxsc.tech',
+      isStaging: true,
       publicKey: 's5FGH1xnRMs6WGPEFX9oIlxYDYEYX4Sg',
       secretKey: 'ltbUjBfqXqwJLf3hToVTTvHho5YRaR3SnL2Dh20x3P3f0A462gmMlUa4pfYq1ScM',
     };
@@ -72,10 +72,10 @@ describe('SmartyPayAPI', ()=>{
         throw new Error('exception expected');
       } catch (e){
 
-        expect(e.body).not.toBeUndefined();
-        expect(e.body.status).toBe(400);
-        expect(e.body.code).toBe('BadRequest');
-        expect(e.body.message).toBe('Invalid value for: body');
+        expect(e.response).not.toBeUndefined();
+        expect(e.response.status).toBe(400);
+        expect(e.response.code).toBe('BadRequest');
+        expect(e.response.message).toBe('Invalid value for: body');
       }
     })
   })

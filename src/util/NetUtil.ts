@@ -116,10 +116,10 @@ export async function request(
         if (statusCode && (statusCode < 200 || statusCode > 299)) {
 
           const error: any = new Error(`HTTP status code ${res.statusCode}`);
-          error.body = resString;
+          error.response = resString;
 
           try {
-            error.body = JSON.parse(resString);
+            error.response = JSON.parse(resString);
           } catch (e){
             // skip
           }

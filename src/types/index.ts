@@ -41,4 +41,5 @@ export interface SignReqProps {
   secretKey: string,
   timeout?: number,
   host?: string,
+  isStaging?: boolean,
 }

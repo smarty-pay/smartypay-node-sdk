@@ -14,6 +14,10 @@ export interface GetSubscriptionsByPayerResp {
   subscriptions: Subscription[],
 }
 
+export interface GetSubscriptionChargesResp {
+  charges: SubscriptionCharge[]
+}
+
 
 export interface CreateSubscriptionReq {
   planId: string,
@@ -22,6 +26,11 @@ export interface CreateSubscriptionReq {
   metadata?: string,
   startFrom?: Date|string|number,
 }
+
+export interface SubscriptionId {
+  contractAddress: string
+}
+
 
 
 export interface SubscriptionPlan {
@@ -65,3 +74,21 @@ export type SubscriptionStatus =
   | 'PendingCancel'
   | 'Cancelled'
   | 'Error';
+
+
+
+export interface SubscriptionCharge {
+  id: string,
+  contractAddress: string,
+  amount: string,
+  chargeDate: string,
+  status: SubscriptionChargeStatus,
+}
+
+
+export type SubscriptionChargeStatus =
+  "Pending"
+  | "Succeeded"
+  | "Retrying"
+  | "Failed"
+  | "Cancelled";
