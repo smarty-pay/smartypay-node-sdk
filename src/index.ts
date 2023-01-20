@@ -1,6 +1,6 @@
 /**
  * SMARTy Pay Node SDK
- * @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+ * @author Evgeny Dolganov <e.dolganov@smartypay.io>
  */
 import {Currency, Network, SignReqProps,} from './types';
 import {CryptoUtil} from './util/CryptoUtil';
@@ -8,7 +8,7 @@ import {get, post} from './util/NetUtil';
 import {isString, removeEnd} from './util';
 import {CreateInvoiceReq, CreateInvoiceResp, InvoiceData, InvoiceStatus} from './types/invoice';
 import {CreateRechargeAddressReq, CreateRechargeAddressResp} from './types/recharge';
-import {GetActivePlansResp, SubscriptionPlan} from './types/subscription';
+import {GetActivePlansResp, GetSubscriptionsByPayerResp, Subscription, SubscriptionPlan} from './types/subscription';
 
 export {
   CreateInvoiceReq,
@@ -22,15 +22,29 @@ export {
 
 export const SmartyPaySubscriptions = {
 
-  async getActivePlans(
-    signProps: SignReqProps
-  ): Promise<SubscriptionPlan[]> {
+  /**
+   * Get active subscriptions plans
+   */
+  async getActivePlans(signProps: SignReqProps): Promise<SubscriptionPlan[]> {
     const {plans} = await getSignReq<GetActivePlansResp>(
       '/integration/subscription-plans',
       signProps
     );
     return plans;
   },
+
+  /**
+   * Get exists subscriptions for payer address
+   */
+  async getSubscriptionsByPayer(payerAddress: string, signProps: SignReqProps): Promise<Subscription[]> {
+    const {subscriptions} = await getSignReq<GetSubscriptionsByPayerResp>(
+      `/integration/subscriptions?payer=${payerAddress}`,
+      signProps,
+    );
+    return subscriptions;
+  }
+
+
 }
 
 

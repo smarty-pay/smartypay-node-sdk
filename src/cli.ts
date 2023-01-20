@@ -2,7 +2,7 @@
 
 /**
  * SMARTy Pay Node SDK
- * @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+ * @author Evgeny Dolganov <e.dolganov@smartypay.io>
  */
 import {SmartyPayAPI} from './index';
 import {Currency} from './types';

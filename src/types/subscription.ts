@@ -1,3 +1,8 @@
+/**
+ * SMARTy Pay Node SDK
+ * @author Evgeny Dolganov <e.dolganov@smartypay.io>
+ */
+
 import {Network, Currency} from './index';
 
 
@@ -5,7 +10,7 @@ export interface GetActivePlansResp {
   plans: SubscriptionPlan[],
 }
 
-export interface GetSubscriptionsResp {
+export interface GetSubscriptionsByPayerResp {
   subscriptions: Subscription[],
 }
 
@@ -34,13 +39,10 @@ export interface Subscription {
   customerId: string,
   nextChargeAt: string,
   payer: string,
-  mode: SubscriptionMode,
   createdAt: string,
   metadata: string,
   status: SubscriptionStatus,
 }
-
-export type SubscriptionMode = 'Standard' | 'Simple';
 
 export type SubscriptionStatus =
   'Draft'

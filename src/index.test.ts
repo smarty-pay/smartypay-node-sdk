@@ -1,3 +1,8 @@
+/**
+ * SMARTy Pay Node SDK
+ * @author Evgeny Dolganov <e.dolganov@smartypay.io>
+ */
+
 import {SignReqProps, SmartyPayAPI} from './index';
 
 
@@ -36,12 +41,20 @@ describe('SmartyPayAPI', ()=>{
       secretKey: 'ltbUjBfqXqwJLf3hToVTTvHho5YRaR3SnL2Dh20x3P3f0A462gmMlUa4pfYq1ScM',
     };
 
+    const payerAddress = '0x14186C8215985f33845722730c6382443Bf9EC65';
+
     test('getSubscriptionPlans', async () => {
-
       const plans = await api.getActivePlans(signProps);
-
       expect(plans).not.toBeUndefined();
       expect(plans.length).toBeGreaterThan(0);
+    });
+
+    test('getSubscriptionsByPayer', async ()=>{
+      const subs = await api.getSubscriptionsByPayer(payerAddress, signProps);
+      expect(subs).not.toBeUndefined();
+      if(subs.length > 0){
+        expect(subs[0].payer).toBe(payerAddress);
+      }
     });
   })
 

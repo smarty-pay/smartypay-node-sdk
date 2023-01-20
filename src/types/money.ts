@@ -1,3 +1,9 @@
+/**
+ * SMARTy Pay Node SDK
+ * @author Evgeny Dolganov <e.dolganov@smartypay.io>
+ */
+
+
 import {Currency, CurrencyKeys} from './index';
 
 
