@@ -1,7 +1,7 @@
-/**
- * SMARTy Pay Node SDK
- * @author Evgeny Dolganov <e.dolganov@smartypay.io>
- */
+/*
+  SMARTy Pay Node SDK
+  @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+*/
 
 export function removeEnd(str: string, last: string): string {
 

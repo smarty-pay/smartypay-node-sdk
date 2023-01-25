@@ -1,8 +1,7 @@
-/**
- * SMARTy Pay Node SDK
- * @author Evgeny Dolganov <e.dolganov@smartypay.io>
- */
-import {Currency, Network, SignReqProps,} from './types';
+/*
+  SMARTy Pay Node SDK
+  @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+*/
 import {CryptoUtil} from './util/CryptoUtil';
 import {get, post} from './util/NetUtil';
 import {isString, removeEnd} from './util';
@@ -15,24 +14,31 @@ import {
   Subscription, SubscriptionCharge, SubscriptionId,
   SubscriptionPlan
 } from './types/subscription';
+import {Network, Currency} from 'smartypay-client-model';
 
 export {
-  CreateInvoiceReq,
-  SignReqProps,
-  InvoiceData,
   Currency,
-  InvoiceStatus,
   Network,
+  CreateInvoiceReq,
+  InvoiceData,
+  InvoiceStatus,
   SubscriptionPlan,
   Subscription,
   SubscriptionId,
   SubscriptionCharge,
 }
 
+export interface ApiOpt {
+  publicKey: string,
+  secretKey: string,
+  timeout?: number,
+  host?: string,
+  isStaging?: boolean,
+}
 
 export class SmartyPaySubscriptions {
 
-  constructor(private readonly signProps: SignReqProps) {}
+  constructor(private readonly apiOpt: ApiOpt) {}
 
   /**
    * Get active subscriptions plans
@@ -40,7 +46,7 @@ export class SmartyPaySubscriptions {
   async getActivePlans(): Promise<SubscriptionPlan[]> {
     const {plans} = await getSignReq<GetActivePlansResp>(
       '/integration/subscription-plans',
-      this.signProps
+      this.apiOpt
     );
     return plans;
   }
@@ -61,7 +67,7 @@ export class SmartyPaySubscriptions {
         metadata: req.metadata,
         startFrom: startFrom.toISOString(),
       },
-      this.signProps
+      this.apiOpt
     );
   }
 
@@ -71,7 +77,7 @@ export class SmartyPaySubscriptions {
   async getSubscriptionsByPayer(payerAddress: string): Promise<Subscription[]> {
     const {subscriptions} = await getSignReq<GetSubscriptionsByPayerResp>(
       `/integration/subscriptions?payer=${payerAddress}`,
-      this.signProps,
+      this.apiOpt,
     );
     return subscriptions;
   }
@@ -82,7 +88,7 @@ export class SmartyPaySubscriptions {
   async getSubscription({contractAddress}: SubscriptionId): Promise<Subscription>{
     return await getSignReq<Subscription>(
       `/integration/subscriptions/${contractAddress}`,
-      this.signProps,
+      this.apiOpt,
     );
   }
 
@@ -93,7 +99,7 @@ export class SmartyPaySubscriptions {
     return await postSignReq<Subscription>(
       `/integration/subscriptions/${contractAddress}/activate`,
       {},
-      this.signProps
+      this.apiOpt
     );
   }
 
@@ -104,7 +110,7 @@ export class SmartyPaySubscriptions {
     return await postSignReq<Subscription>(
       `/integration/subscriptions/${contractAddress}/pause`,
       {},
-      this.signProps
+      this.apiOpt
     );
   }
 
@@ -115,7 +121,7 @@ export class SmartyPaySubscriptions {
     return await postSignReq<Subscription>(
       `/integration/subscriptions/${contractAddress}/unpause`,
       {},
-      this.signProps
+      this.apiOpt
     );
   }
 
@@ -125,7 +131,7 @@ export class SmartyPaySubscriptions {
   async getSubscriptionCharges({contractAddress}: SubscriptionId): Promise<SubscriptionCharge[]>{
     const {charges} =  await getSignReq<GetSubscriptionChargesResp>(
       `/integration/subscriptions/${contractAddress}`,
-      this.signProps,
+      this.apiOpt,
     );
     return charges;
   }
@@ -137,7 +143,7 @@ export class SmartyPaySubscriptions {
     return await postSignReq<Subscription>(
       `/integration/subscriptions/${contractAddress}/cancel`,
       {},
-      this.signProps
+      this.apiOpt
     );
   }
 
@@ -147,7 +153,7 @@ export class SmartyPaySubscriptions {
 
 export class SmartyPayInvoices {
 
-  constructor(private readonly signProps: SignReqProps) {}
+  constructor(private readonly apiOpt: ApiOpt) {}
 
   /**
    * Create invoice.
@@ -167,7 +173,7 @@ export class SmartyPayInvoices {
     const {invoice} = await postSignReq<CreateInvoiceResp>(
       '/integration/invoices',
       bodyData,
-      this.signProps
+      this.apiOpt
     );
 
     return invoice;
@@ -177,7 +183,7 @@ export class SmartyPayInvoices {
 
 export class SmartyPayRecharges {
 
-  constructor(private readonly signProps: SignReqProps) {}
+  constructor(private readonly apiOpt: ApiOpt) {}
 
   async createRechargeAddress(data: CreateRechargeAddressReq,): Promise<CreateRechargeAddressResp>{
 
@@ -189,7 +195,7 @@ export class SmartyPayRecharges {
     return await postSignReq<CreateRechargeAddressResp>(
       '/integration/push-addresses',
       bodyData,
-      this.signProps
+      this.apiOpt
     );
   }
 }
@@ -220,10 +226,10 @@ export class SmartyPayAPI {
   public readonly subscriptions: SmartyPaySubscriptions;
   public readonly recharges: SmartyPayRecharges;
 
-  constructor(signProps: SignReqProps) {
-    this.invoices = new SmartyPayInvoices(signProps);
-    this.subscriptions = new SmartyPaySubscriptions(signProps);
-    this.recharges = new SmartyPayRecharges(signProps);
+  constructor(apiOpt: ApiOpt) {
+    this.invoices = new SmartyPayInvoices(apiOpt);
+    this.subscriptions = new SmartyPaySubscriptions(apiOpt);
+    this.recharges = new SmartyPayRecharges(apiOpt);
   }
 
   static readonly utils = {
@@ -235,7 +241,7 @@ export class SmartyPayAPI {
 async function postSignReq<T>(
   apiPath: string,
   bodyData: any,
-  signReq: SignReqProps
+  signReq: ApiOpt
 ): Promise<T> {
 
   const {
@@ -269,20 +275,20 @@ async function postSignReq<T>(
 
 async function getSignReq<T>(
   apiPath: string,
-  signReq: SignReqProps,
+  apiOpt: ApiOpt,
 ): Promise<T> {
 
   const {
     secretKey,
     publicKey,
     timeout,
-  } = signReq;
+  } = apiOpt;
 
   const now = Date.now();
   const ts = Math.round(now / 1000).toString();
   const messageToSign = ts + `GET${apiPath}`;
   const sig = CryptoUtil.hmacSha256Hex(secretKey, messageToSign);
-  const targetHost = apiHost(signReq);
+  const targetHost = apiHost(apiOpt);
 
   const resp = await get(`${targetHost}${apiPath}`, undefined, {
     headers: {
@@ -299,7 +305,7 @@ async function getSignReq<T>(
 }
 
 
-function apiHost({host, isStaging}: SignReqProps){
+function apiHost({host, isStaging}: ApiOpt){
 
   // custom host
   if(host)

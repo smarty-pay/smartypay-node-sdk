@@ -1,9 +1,9 @@
-/**
- * SMARTy Pay Node SDK
- * @author Evgeny Dolganov <e.dolganov@smartypay.io>
- */
+/*
+  SMARTy Pay Node SDK
+  @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+*/
 
-import {SignReqProps, SmartyPayAPI} from './index';
+import {ApiOpt, SmartyPayAPI} from './index';
 
 
 describe('SmartyPayAPI', ()=>{
@@ -33,13 +33,13 @@ describe('SmartyPayAPI', ()=>{
 
   describe('subscriptions', ()=>{
 
-    const signProps: SignReqProps = {
+    const apiOpt: ApiOpt = {
       isStaging: true,
       publicKey: 's5FGH1xnRMs6WGPEFX9oIlxYDYEYX4Sg',
       secretKey: 'ltbUjBfqXqwJLf3hToVTTvHho5YRaR3SnL2Dh20x3P3f0A462gmMlUa4pfYq1ScM',
     };
 
-    const api = new SmartyPayAPI(signProps).subscriptions;
+    const api = new SmartyPayAPI(apiOpt).subscriptions;
 
 
     const payerAddress = '0x14186C8215985f33845722730c6382443Bf9EC65';
@@ -78,7 +78,7 @@ describe('SmartyPayAPI', ()=>{
         expect(e.response.message).toBe('Invalid value for: body');
       }
     })
-  })
+  });
 
 
 

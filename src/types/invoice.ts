@@ -1,10 +1,10 @@
-/**
- * SMARTy Pay Node SDK
- * @author Evgeny Dolganov <e.dolganov@smartypay.io>
- */
+/*
+  SMARTy Pay Node SDK
+  @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+*/
 
-import {Currency} from './index';
 
+import {Currency} from 'smartypay-client-model';
 
 export interface CreateInvoiceReq {
   expiresAt: Date,

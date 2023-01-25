@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-/**
- * SMARTy Pay Node SDK
- * @author Evgeny Dolganov <e.dolganov@smartypay.io>
- */
+/*
+  SMARTy Pay Node SDK
+  @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
+*/
 import {SmartyPayAPI} from './index';
-import {Currency} from './types';
+import {Currency} from 'smartypay-client-model';
 
 type StateType = 'unknown'
   | 'invoice-wait-data'
