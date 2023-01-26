@@ -4,7 +4,7 @@
 */
 
 
-import {Currency} from 'smartypay-client-model';
+import {Currency, Invoice} from 'smartypay-client-model';
 
 export interface CreateInvoiceReq {
   expiresAt: Date,
@@ -15,32 +15,5 @@ export interface CreateInvoiceReq {
 
 
 export interface CreateInvoiceResp {
-  invoice: InvoiceData,
+  invoice: Invoice,
 }
-
-
-export interface InvoiceData {
-  id: string,
-  companyId: number,
-  paymentAddress: string,
-  amount: string,
-  status: InvoiceStatus,
-  createdAt: Date,
-  expiresAt: Date,
-  paidAt?: Date | null,
-  paidAmount?: string,
-  errorCode?: string,
-  sequenceNumber: number,
-  createdAtBlock: number,
-  auxAmounts: string[],
-}
-
-
-export type InvoiceStatus =
-  'Created'
-  | 'Paid'
-  | 'Confirmed'
-  | 'OverPaid'
-  | 'UnderPaid'
-  | 'Expired'
-  | 'Invalid';

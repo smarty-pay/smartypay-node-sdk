@@ -5,27 +5,24 @@
 import {CryptoUtil} from './util/CryptoUtil';
 import {get, post} from './util/NetUtil';
 import {isString, removeEnd} from './util';
-import {CreateInvoiceReq, CreateInvoiceResp, InvoiceData, InvoiceStatus} from './types/invoice';
+import {CreateInvoiceReq, CreateInvoiceResp} from './types/invoice';
 import {CreateRechargeAddressReq, CreateRechargeAddressResp} from './types/recharge';
 import {
   CreateSubscriptionReq,
-  GetActivePlansResp, GetSubscriptionChargesResp,
+  GetActivePlansResp,
+  GetSubscriptionChargesResp,
   GetSubscriptionsByPayerResp,
-  Subscription, SubscriptionCharge, SubscriptionId,
-  SubscriptionPlan
 } from './types/subscription';
-import {Network, Currency} from 'smartypay-client-model';
+import {
+  Invoice,
+  Subscription,
+  SubscriptionCharge,
+  SubscriptionId,
+  SubscriptionPlan
+} from 'smartypay-client-model';
 
 export {
-  Currency,
-  Network,
   CreateInvoiceReq,
-  InvoiceData,
-  InvoiceStatus,
-  SubscriptionPlan,
-  Subscription,
-  SubscriptionId,
-  SubscriptionCharge,
 }
 
 export interface ApiOpt {
@@ -159,7 +156,7 @@ export class SmartyPayInvoices {
    * Create invoice.
    * [Docs](https://docs.smartypay.io/general/authentication#create-invoice-with-signature)
    */
-  async createInvoice(data: CreateInvoiceReq): Promise<InvoiceData> {
+  async createInvoice(data: CreateInvoiceReq): Promise<Invoice> {
 
     const bodyData: any = {
       expiresAt: data.expiresAt.toISOString(),
