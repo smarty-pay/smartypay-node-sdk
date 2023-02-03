@@ -1,6 +1,6 @@
 {
   "name": "smartypay-node-sdk",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Simple library for creating invoices on backend side",
   "author": "Evgeny Dolganov <evgenij.dolganov@gmail.com>",
   "repository": "https://github.com/smarty-pay/smartypay-node-sdk",
@@ -21,9 +21,6 @@
     "esbuild-node": "node ./build.js",
     "build-run-cli": "npm run esbuild-node && node dist/esbuild/smartypay-cli.js"
   },
-  "dependencies": {
-    "smartypay-client-model": "1.1.0"
-  },
   "devDependencies": {
     "@types/jest": "^26.0.21",
     "@types/node": "^15.0.1",
@@ -37,5 +34,8 @@
     "ts-node": "^9.1.1",
     "typedoc": "^0.22.15",
     "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "smartypay-client-model": "^2.0.0"
   }
 }
