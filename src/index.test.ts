@@ -50,6 +50,19 @@ describe('SmartyPayAPI', ()=>{
       expect(plans.length).toBeGreaterThan(0);
     });
 
+    test('getSubscriptionPlanById', async () => {
+
+      const plans = await api.getActivePlans();
+      const planId = plans[0].id;
+
+      const plan = await api.getActivePlan(planId);
+      expect(plan).not.toBeUndefined();
+      expect(plan?.id).toBe(planId);
+
+      const noPlan = await api.getActivePlan('unknown-id');
+      expect(noPlan).toBeUndefined();
+    });
+
     test('getSubscriptionsByPayer', async ()=>{
       const subs = await api.getSubscriptionsByPayer(payerAddress);
       expect(subs).not.toBeUndefined();

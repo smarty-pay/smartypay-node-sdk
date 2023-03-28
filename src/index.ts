@@ -49,6 +49,14 @@ export class SmartyPaySubscriptions {
   }
 
   /**
+   * Get active subscription plan by id
+   */
+  async getActivePlan(planId: string): Promise<SubscriptionPlan|undefined> {
+    const list = await this.getActivePlans();
+    return list.find(p => p.id === planId);
+  }
+
+  /**
    * Create subscription for payer
    */
   async createSubscription(req: CreateSubscriptionReq): Promise<Subscription> {
