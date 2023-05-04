@@ -98,39 +98,6 @@ export class SmartyPaySubscriptions {
   }
 
   /**
-   * Activate subscription for payer by its contractAddress
-   */
-  async activateSubscription({contractAddress}: SubscriptionId): Promise<Subscription>{
-    return await postSignReq<Subscription>(
-      `/integration/subscriptions/${contractAddress}/activate`,
-      {},
-      this.apiOpt
-    );
-  }
-
-  /**
-   * Pause subscription for payer by its contractAddress
-   */
-  async pauseSubscription({contractAddress}: SubscriptionId): Promise<Subscription> {
-    return await postSignReq<Subscription>(
-      `/integration/subscriptions/${contractAddress}/pause`,
-      {},
-      this.apiOpt
-    );
-  }
-
-  /**
-   * Unpause subscription for payer by its contractAddress
-   */
-  async unpauseSubscription({contractAddress}: SubscriptionId): Promise<Subscription> {
-    return await postSignReq<Subscription>(
-      `/integration/subscriptions/${contractAddress}/unpause`,
-      {},
-      this.apiOpt
-    );
-  }
-
-  /**
    * Get subscription's charges by its contractAddress
    */
   async getSubscriptionCharges({contractAddress}: SubscriptionId): Promise<SubscriptionCharge[]>{
@@ -139,17 +106,6 @@ export class SmartyPaySubscriptions {
       this.apiOpt,
     );
     return charges;
-  }
-
-  /**
-   * Cancel subscription for payer by his contractAddress
-   */
-  async cancelSubscription({contractAddress}: SubscriptionId): Promise<Subscription> {
-    return await postSignReq<Subscription>(
-      `/integration/subscriptions/${contractAddress}/cancel`,
-      {},
-      this.apiOpt
-    );
   }
 
 
