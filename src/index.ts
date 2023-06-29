@@ -18,7 +18,8 @@ import {
   Subscription,
   SubscriptionCharge,
   SubscriptionId,
-  SubscriptionPlan
+  SubscriptionPlan,
+  SubscriptionStatus
 } from 'smartypay-client-model';
 
 export {
@@ -31,7 +32,21 @@ export interface ApiOpt {
   timeout?: number,
   host?: string,
   isStaging?: boolean,
+  subscriptions?: SubscriptionsApiOpt,
 }
+
+export interface SubscriptionsApiOpt {
+  skipStatuses?: SubscriptionStatus[]
+}
+
+export const DefaultSkipStatuses: SubscriptionStatus[] = [
+  'Draft',
+  'Suspended',
+  'Cancelled',
+  'PendingCancel',
+  'Error',
+  'Finished'
+];
 
 export class SmartyPaySubscriptions {
 
@@ -77,14 +92,29 @@ export class SmartyPaySubscriptions {
   }
 
   /**
+   * Get subscriptions by customer id
+   */
+  async getSubscriptionsByCustomer(customerId: string): Promise<Subscription[]> {
+
+    const {subscriptions} = await getSignReq<GetSubscriptionsByPayerResp>(
+      `/integration/subscriptions?customerId=${customerId}`,
+      this.apiOpt,
+    );
+
+    return this.filterSubs(subscriptions);
+  }
+
+  /**
    * Get subscriptions for payer address
    */
   async getSubscriptionsByPayer(payerAddress: string): Promise<Subscription[]> {
+
     const {subscriptions} = await getSignReq<GetSubscriptionsByPayerResp>(
       `/integration/subscriptions?payer=${payerAddress}`,
       this.apiOpt,
     );
-    return subscriptions;
+
+    return this.filterSubs(subscriptions);
   }
 
   /**
@@ -109,7 +139,15 @@ export class SmartyPaySubscriptions {
   }
 
 
+  /** ignore Draft and Cancelled and other unimportant statuses  */
+  private filterSubs(list: Subscription[]): Subscription[] {
+
+    const blackList = this.apiOpt.subscriptions?.skipStatuses || DefaultSkipStatuses;
+
+    return (list || []).filter(sub => ! blackList.includes(sub.status));
+  }
 }
+
 
 
 export class SmartyPayInvoices {
