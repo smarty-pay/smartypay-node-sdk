@@ -19,7 +19,8 @@ import {
   SubscriptionCharge,
   SubscriptionId,
   SubscriptionPlan,
-  SubscriptionStatus
+  SubscriptionStatus,
+  SubscriptionPlanStatus,
 } from 'smartypay-client-model';
 
 export {
@@ -52,15 +53,24 @@ export class SmartyPaySubscriptions {
 
   constructor(private readonly apiOpt: ApiOpt) {}
 
+
+  /**
+   * Get subscriptions plans in target statuses
+   * @param statusIn
+   */
+  async getPlans(statusIn: SubscriptionPlanStatus[]): Promise<SubscriptionPlan[]> {
+    const {plans} = await getSignReq<GetActivePlansResp>(
+      `/integration/subscription-plans?statusIn=${statusIn.join(',')}`,
+      this.apiOpt
+    );
+    return plans;
+  }
+
   /**
    * Get active subscriptions plans
    */
   async getActivePlans(): Promise<SubscriptionPlan[]> {
-    const {plans} = await getSignReq<GetActivePlansResp>(
-      '/integration/subscription-plans',
-      this.apiOpt
-    );
-    return plans;
+    return this.getPlans(['Active']);
   }
 
   /**

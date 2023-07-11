@@ -44,6 +44,31 @@ describe('SmartyPayAPI', ()=>{
 
     const payerAddress = '0x14186C8215985f33845722730c6382443Bf9EC65';
 
+    test('getPlans', async () => {
+
+      const plansInActive = await api.getPlans(['Active']);
+      for(const plan of plansInActive){
+        expect(plan.status).toBe('Active');
+      }
+
+      const plansInArchived = await api.getPlans(['Archived']);
+      for(const plan of plansInArchived){
+        expect(plan.status).toBe('Archived');
+      }
+
+      const plansInDraft = await api.getPlans(['Draft']);
+      for(const plan of plansInDraft){
+        expect(plan.status).toBe('Draft');
+      }
+
+      const plansInMix = await api.getPlans(['Active', 'Archived']);
+      expect(plansInMix.length).toBe(plansInActive.length + plansInArchived.length);
+
+      const activePlans = await api.getActivePlans();
+      expect(JSON.stringify(plansInActive)).toEqual(JSON.stringify(activePlans));
+      expect(JSON.stringify(plansInArchived)).not.toEqual(JSON.stringify(activePlans));
+    });
+
     test('getSubscriptionPlans', async () => {
       const plans = await api.getActivePlans();
       expect(plans).not.toBeUndefined();
