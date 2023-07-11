@@ -9,7 +9,7 @@ import {CreateInvoiceReq, CreateInvoiceResp} from './types/invoice';
 import {CreateRechargeAddressReq, CreateRechargeAddressResp} from './types/recharge';
 import {
   CreateSubscriptionReq,
-  GetActivePlansResp,
+  GetPlansResp,
   GetSubscriptionChargesResp,
   GetSubscriptionsByPayerResp,
 } from './types/subscription';
@@ -59,7 +59,7 @@ export class SmartyPaySubscriptions {
    * @param statusIn
    */
   async getPlans(statusIn: SubscriptionPlanStatus[]): Promise<SubscriptionPlan[]> {
-    const {plans} = await getSignReq<GetActivePlansResp>(
+    const {plans} = await getSignReq<GetPlansResp>(
       `/integration/subscription-plans?statusIn=${statusIn.join(',')}`,
       this.apiOpt
     );

@@ -6,7 +6,7 @@
 
 import {Subscription, SubscriptionCharge, SubscriptionPlan} from 'smartypay-client-model';
 
-export interface GetActivePlansResp {
+export interface GetPlansResp {
   plans: SubscriptionPlan[],
 }
 
