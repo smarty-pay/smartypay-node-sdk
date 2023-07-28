@@ -44,6 +44,21 @@ describe('SmartyPayAPI', ()=>{
 
     const payerAddress = '0x14186C8215985f33845722730c6382443Bf9EC65';
 
+    test('createCustomerToken', async()=>{
+
+      const customerId = '1';
+      const customerId2 = '2';
+
+      const token1 = await api.createCustomerToken({customerId});
+      const token2 = await api.createCustomerToken({customerId});
+      const token3 = await api.createCustomerToken({customerId: customerId2});
+
+      expect(token1).not.toBeUndefined();
+      expect(token1).not.toEqual(token2);
+      expect(token1).not.toEqual(token3);
+      expect(token2).not.toEqual(token3);
+    });
+
     test('getPlans', async () => {
 
       const plansInActive = await api.getPlans(['Active']);

@@ -12,6 +12,7 @@ import {
   GetPlansResp,
   GetSubscriptionChargesResp,
   GetSubscriptionsByPayerResp,
+  CreateCustomerTokenReq,
 } from './types/subscription';
 import {
   Invoice,
@@ -146,6 +147,22 @@ export class SmartyPaySubscriptions {
       this.apiOpt,
     );
     return charges;
+  }
+
+  /**
+   * Create session token for external subscription widget access
+   */
+  async createCustomerToken({customerId}: CreateCustomerTokenReq): Promise<string> {
+
+    const {token} = await postSignReq<any>(
+      '/integration/subscriptions/create-customer-token',
+      {
+        customerId
+      },
+      this.apiOpt
+    );
+
+    return token;
   }
 
 

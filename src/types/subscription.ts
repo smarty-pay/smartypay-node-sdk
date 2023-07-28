@@ -26,3 +26,7 @@ export interface CreateSubscriptionReq {
   metadata?: string,
   startFrom?: Date|string|number,
 }
+
+export interface CreateCustomerTokenReq {
+  customerId: string,
+}
