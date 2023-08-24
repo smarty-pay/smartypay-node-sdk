@@ -219,7 +219,7 @@ export class SmartyPayRecharges {
     }
 
     return await postSignReq<CreateRechargeAddressResp>(
-      '/integration/push-addresses',
+      '/integration/recharge-addresses',
       bodyData,
       this.apiOpt
     );
