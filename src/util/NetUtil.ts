@@ -4,7 +4,7 @@
 */
 import https from 'https';
 import http from 'http';
-import {URLSearchParams} from 'url';
+import { URL, URLSearchParams } from 'url';
 
 export interface CallProps {
   timeout?: number,
@@ -92,18 +92,25 @@ export async function request(
     sendHeaders['content-length'] = reqBody.length;
   }
 
+  const uri = new URL(url);
+
   const options = {
+    hostname: uri.hostname,
+    port: uri.port,
+    path: `${uri.pathname}${uri.search}`,
+    protocol: uri.protocol,
     method,
     headers: sendHeaders,
     timeout: timeout || 10_000, // in ms
-  }
+  };
+
+  const { request } = uri.protocol === 'https:' ? https : http;
 
   return new Promise((resolve, reject) => {
 
-    const isHttps = url.startsWith('https://');
-    const api = isHttps? https : http;
-
-    const req = api.request(url, options, (res) => {
+    // using request(options) is more flexible than request(url, options)
+    // for example: no errors in 'https-proxy-agent' lib
+    const req = request(options, (res) => {
 
       const statusCode = res.statusCode;
 
