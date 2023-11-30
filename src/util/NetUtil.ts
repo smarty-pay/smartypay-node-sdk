@@ -84,7 +84,8 @@ export async function request(
     headers,
   }: CallProps): Promise<string> {
 
-  const sendHeaders = {
+  const sendHeaders: any = {
+    'user-agent': 'smartypay-node-sdk',
     ...(headers || {}),
   };
 
