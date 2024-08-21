@@ -3,15 +3,14 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-import {Currency} from 'smartypay-client-model';
+import type { Currency } from 'smartypay-client-model';
 
 export interface CreateRechargeAddressReq {
-  customerId: string,
-  token: Currency,
+  customerId: string;
+  token: Currency;
 }
 
-
 export interface CreateRechargeAddressResp {
-  address: string,
-  token: string,
+  address: string;
+  token: string;
 }

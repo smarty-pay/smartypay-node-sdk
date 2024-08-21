@@ -2,43 +2,43 @@
   SMARTy Pay Node SDK
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
-import {CryptoUtil} from './util/CryptoUtil';
-import {get, post} from './util/NetUtil';
-import {isString, removeEnd} from './util';
-import {CreateInvoiceReq, CreateInvoiceResp} from './types/invoice';
-import {CreateRechargeAddressReq, CreateRechargeAddressResp} from './types/recharge';
-import {
+import { CreatePaymentReq } from './types/payment';
+import { isString, removeEnd } from './util';
+import { CryptoUtil } from './util/CryptoUtil';
+import { get, post } from './util/NetUtil';
+
+import type { CreatePaymentResp } from './types/payment';
+import type { CreateRechargeAddressReq, CreateRechargeAddressResp } from './types/recharge';
+import type {
+  CreateCustomerTokenReq,
   CreateSubscriptionReq,
   GetPlansResp,
   GetSubscriptionChargesResp,
   GetSubscriptionsByPayerResp,
-  CreateCustomerTokenReq,
 } from './types/subscription';
-import {
-  Invoice,
+import type {
+  Payment,
   Subscription,
   SubscriptionCharge,
   SubscriptionId,
   SubscriptionPlan,
-  SubscriptionStatus,
   SubscriptionPlanStatus,
+  SubscriptionStatus,
 } from 'smartypay-client-model';
 
-export {
-  CreateInvoiceReq,
-}
+export { CreatePaymentReq };
 
 export interface ApiOpt {
-  publicKey: string,
-  secretKey: string,
-  timeout?: number,
-  host?: string,
-  isStaging?: boolean,
-  subscriptions?: SubscriptionsApiOpt,
+  publicKey: string;
+  secretKey: string;
+  timeout?: number;
+  host?: string;
+  isStaging?: boolean;
+  subscriptions?: SubscriptionsApiOpt;
 }
 
 export interface SubscriptionsApiOpt {
-  skipStatuses?: SubscriptionStatus[]
+  skipStatuses?: SubscriptionStatus[];
 }
 
 export const DefaultSkipStatuses: SubscriptionStatus[] = [
@@ -47,22 +47,20 @@ export const DefaultSkipStatuses: SubscriptionStatus[] = [
   'Cancelled',
   'PendingCancel',
   'Error',
-  'Finished'
+  'Finished',
 ];
 
 export class SmartyPaySubscriptions {
-
   constructor(private readonly apiOpt: ApiOpt) {}
-
 
   /**
    * Get subscriptions plans in target statuses
    * @param statusIn
    */
   async getPlans(statusIn: SubscriptionPlanStatus[]): Promise<SubscriptionPlan[]> {
-    const {plans} = await getSignReq<GetPlansResp>(
+    const { plans } = await getSignReq<GetPlansResp>(
       `/integration/subscription-plans?statusIn=${statusIn.join(',')}`,
-      this.apiOpt
+      this.apiOpt,
     );
     return plans;
   }
@@ -77,19 +75,18 @@ export class SmartyPaySubscriptions {
   /**
    * Get active subscription plan by id
    */
-  async getActivePlan(planId: string): Promise<SubscriptionPlan|undefined> {
+  async getActivePlan(planId: string): Promise<SubscriptionPlan | undefined> {
     const list = await this.getActivePlans();
-    return list.find(p => p.id === planId);
+    return list.find((p) => p.id === planId);
   }
 
   /**
    * Create subscription for payer
    */
   async createSubscription(req: CreateSubscriptionReq): Promise<Subscription> {
+    const startFrom: Date = req.startFrom ? new Date(req.startFrom) : new Date();
 
-    const startFrom: Date = req.startFrom? new Date(req.startFrom) : new Date();
-
-    return await postSignReq<Subscription>(
+    return postSignReq<Subscription>(
       '/integration/subscriptions',
       {
         planId: req.planId,
@@ -98,7 +95,7 @@ export class SmartyPaySubscriptions {
         metadata: req.metadata,
         startFrom: startFrom.toISOString(),
       },
-      this.apiOpt
+      this.apiOpt,
     );
   }
 
@@ -106,8 +103,7 @@ export class SmartyPaySubscriptions {
    * Get subscriptions by customer id
    */
   async getSubscriptionsByCustomer(customerId: string): Promise<Subscription[]> {
-
-    const {subscriptions} = await getSignReq<GetSubscriptionsByPayerResp>(
+    const { subscriptions } = await getSignReq<GetSubscriptionsByPayerResp>(
       `/integration/subscriptions?customerId=${customerId}`,
       this.apiOpt,
     );
@@ -119,8 +115,7 @@ export class SmartyPaySubscriptions {
    * Get subscriptions for payer address
    */
   async getSubscriptionsByPayer(payerAddress: string): Promise<Subscription[]> {
-
-    const {subscriptions} = await getSignReq<GetSubscriptionsByPayerResp>(
+    const { subscriptions } = await getSignReq<GetSubscriptionsByPayerResp>(
       `/integration/subscriptions?payer=${payerAddress}`,
       this.apiOpt,
     );
@@ -131,18 +126,15 @@ export class SmartyPaySubscriptions {
   /**
    * Get subscription by its contractAddress
    */
-  async getSubscription({contractAddress}: SubscriptionId): Promise<Subscription>{
-    return await getSignReq<Subscription>(
-      `/integration/subscriptions/${contractAddress}`,
-      this.apiOpt,
-    );
+  async getSubscription({ contractAddress }: SubscriptionId): Promise<Subscription> {
+    return getSignReq<Subscription>(`/integration/subscriptions/${contractAddress}`, this.apiOpt);
   }
 
   /**
    * Get subscription's charges by its contractAddress
    */
-  async getSubscriptionCharges({contractAddress}: SubscriptionId): Promise<SubscriptionCharge[]>{
-    const {charges} =  await getSignReq<GetSubscriptionChargesResp>(
+  async getSubscriptionCharges({ contractAddress }: SubscriptionId): Promise<SubscriptionCharge[]> {
+    const { charges } = await getSignReq<GetSubscriptionChargesResp>(
       `/integration/subscriptions/${contractAddress}`,
       this.apiOpt,
     );
@@ -152,82 +144,63 @@ export class SmartyPaySubscriptions {
   /**
    * Create session token for external subscription widget access
    */
-  async createCustomerToken({customerId}: CreateCustomerTokenReq): Promise<string> {
-
-    const {token} = await postSignReq<any>(
+  async createCustomerToken({ customerId }: CreateCustomerTokenReq): Promise<string> {
+    const { token } = await postSignReq<{ token: string }>(
       '/integration/subscriptions/create-customer-token',
       {
-        customerId
+        customerId,
       },
-      this.apiOpt
+      this.apiOpt,
     );
 
     return token;
   }
 
-
   /** ignore Draft and Cancelled and other unimportant statuses  */
   private filterSubs(list: Subscription[]): Subscription[] {
+    const blackList = this.apiOpt.subscriptions?.skipStatuses ?? DefaultSkipStatuses;
 
-    const blackList = this.apiOpt.subscriptions?.skipStatuses || DefaultSkipStatuses;
-
-    return (list || []).filter(sub => ! blackList.includes(sub.status));
+    return (list || []).filter((sub) => !blackList.includes(sub.status));
   }
 }
 
-
-
-export class SmartyPayInvoices {
-
+export class SmartyPayPayments {
   constructor(private readonly apiOpt: ApiOpt) {}
 
   /**
-   * Create invoice.
-   * [Docs](https://docs.smartypay.io/general/authentication#create-invoice-with-signature)
+   * Create payment.
+   * [Docs](https://docs.smartypay.io/general/authentication#create-payment-with-signature)
    */
-  async createInvoice(data: CreateInvoiceReq): Promise<Invoice> {
-
-    const bodyData: any = {
+  async createPayment(data: CreatePaymentReq): Promise<Payment> {
+    const bodyData: Record<string, string> = {
       expiresAt: data.expiresAt.toISOString(),
       amount: `${data.amount} ${data.token}`,
+    };
+
+    if (data.metadata) {
+      bodyData.metadata = isString(data.metadata) ? data.metadata : JSON.stringify(data.metadata);
     }
 
-    if(data.metadata){
-      bodyData.metadata = isString(data.metadata)? data.metadata : JSON.stringify(data.metadata);
-    }
+    const { payment } = await postSignReq<CreatePaymentResp>('/integration/invoices', bodyData, this.apiOpt);
 
-    const {invoice} = await postSignReq<CreateInvoiceResp>(
-      '/integration/invoices',
-      bodyData,
-      this.apiOpt
-    );
-
-    return invoice;
+    return payment;
   }
-
 }
 
 export class SmartyPayRecharges {
-
   constructor(private readonly apiOpt: ApiOpt) {}
 
-  async createRechargeAddress(data: CreateRechargeAddressReq,): Promise<CreateRechargeAddressResp>{
-
+  async createRechargeAddress(data: CreateRechargeAddressReq): Promise<CreateRechargeAddressResp> {
     const bodyData: any = {
       cid: data.customerId,
       token: data.token,
-    }
+    };
 
-    return await postSignReq<CreateRechargeAddressResp>(
-      '/integration/recharge-addresses',
-      bodyData,
-      this.apiOpt
-    );
+    return postSignReq<CreateRechargeAddressResp>('/integration/recharge-addresses', bodyData, this.apiOpt);
   }
 }
 
 export const SmartyPayUtils = {
-
   /**
    * Get Sha256 signature.
    * [Docs](https://docs.smartypay.io/api/webhooks)
@@ -242,50 +215,38 @@ export const SmartyPayUtils = {
    */
   isValidSignature(message: string, signature: string, secretKey: string): boolean {
     return SmartyPayUtils.getMessageSignature(message, secretKey) === signature;
-  }
-
-}
+  },
+};
 
 export class SmartyPayAPI {
-
-  public readonly invoices: SmartyPayInvoices;
+  public readonly payments: SmartyPayPayments;
   public readonly subscriptions: SmartyPaySubscriptions;
   public readonly recharges: SmartyPayRecharges;
 
   constructor(apiOpt: ApiOpt) {
-    this.invoices = new SmartyPayInvoices(apiOpt);
+    this.payments = new SmartyPayPayments(apiOpt);
     this.subscriptions = new SmartyPaySubscriptions(apiOpt);
     this.recharges = new SmartyPayRecharges(apiOpt);
   }
 
   static readonly utils = {
-    ...SmartyPayUtils
-  }
+    ...SmartyPayUtils,
+  };
 }
 
-
-async function postSignReq<T>(
-  apiPath: string,
-  bodyData: any,
-  signReq: ApiOpt
-): Promise<T> {
-
-  const {
-    secretKey,
-    publicKey,
-    timeout,
-  } = signReq;
+async function postSignReq<T>(apiPath: string, bodyData: any, signReq: ApiOpt): Promise<T> {
+  const { secretKey, publicKey, timeout } = signReq;
 
   const now = Date.now();
   const ts = Math.round(now / 1000).toString();
   const body = JSON.stringify(bodyData);
-  const messageToSign = ts + `POST${apiPath}` + body;
+  const messageToSign = `${ts}POST${apiPath}${body}`;
   const sig = CryptoUtil.hmacSha256Hex(secretKey, messageToSign);
   const targetHost = apiHost(signReq);
 
   const resp = await post(`${targetHost}${apiPath}`, body, {
     headers: {
-      'accept': 'application/json',
+      accept: 'application/json',
       'content-type': 'application/json',
       'x-api-key': publicKey,
       'x-api-sig': sig,
@@ -297,28 +258,18 @@ async function postSignReq<T>(
   return JSON.parse(resp) as T;
 }
 
-
-
-async function getSignReq<T>(
-  apiPath: string,
-  apiOpt: ApiOpt,
-): Promise<T> {
-
-  const {
-    secretKey,
-    publicKey,
-    timeout,
-  } = apiOpt;
+async function getSignReq<T>(apiPath: string, apiOpt: ApiOpt): Promise<T> {
+  const { secretKey, publicKey, timeout } = apiOpt;
 
   const now = Date.now();
   const ts = Math.round(now / 1000).toString();
-  const messageToSign = ts + `GET${apiPath}`;
+  const messageToSign = `${ts}GET${apiPath}`;
   const sig = CryptoUtil.hmacSha256Hex(secretKey, messageToSign);
   const targetHost = apiHost(apiOpt);
 
   const resp = await get(`${targetHost}${apiPath}`, undefined, {
     headers: {
-      'accept': 'application/json',
+      accept: 'application/json',
       'content-type': 'application/json',
       'x-api-key': publicKey,
       'x-api-sig': sig,
@@ -330,16 +281,12 @@ async function getSignReq<T>(
   return JSON.parse(resp) as T;
 }
 
-
-function apiHost({host, isStaging}: ApiOpt){
-
+function apiHost({ host, isStaging }: ApiOpt) {
   // custom host
-  if(host)
-    return removeEnd(host, '/');
+  if (host) return removeEnd(host, '/');
 
   // staging api
-  if(isStaging)
-    return 'https://ncps-api.staging.mnxsc.tech';
+  if (isStaging) return 'https://ncps-api.staging.mnxsc.tech';
 
   // default prod api
   return 'https://api.smartypay.io';

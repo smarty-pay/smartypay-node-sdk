@@ -3,30 +3,28 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-
-import {Subscription, SubscriptionCharge, SubscriptionPlan} from 'smartypay-client-model';
+import type { Subscription, SubscriptionCharge, SubscriptionPlan } from 'smartypay-client-model';
 
 export interface GetPlansResp {
-  plans: SubscriptionPlan[],
+  plans: SubscriptionPlan[];
 }
 
 export interface GetSubscriptionsByPayerResp {
-  subscriptions: Subscription[],
+  subscriptions: Subscription[];
 }
 
 export interface GetSubscriptionChargesResp {
-  charges: SubscriptionCharge[]
+  charges: SubscriptionCharge[];
 }
 
-
 export interface CreateSubscriptionReq {
-  planId: string,
-  payer: string,
-  customerId: string,
-  metadata?: string,
-  startFrom?: Date|string|number,
+  planId: string;
+  payer: string;
+  customerId: string;
+  metadata?: string;
+  startFrom?: Date | string | number;
 }
 
 export interface CreateCustomerTokenReq {
-  customerId: string,
+  customerId: string;
 }
