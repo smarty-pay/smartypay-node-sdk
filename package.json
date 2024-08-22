@@ -44,6 +44,6 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "smartypay-client-model": "2.30.0"
+    "smartypay-client-model": "2.34.0"
   }
 }

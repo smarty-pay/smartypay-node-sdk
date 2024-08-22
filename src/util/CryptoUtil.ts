@@ -2,6 +2,7 @@
   SMARTy Pay Node SDK
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
+
 import * as crypto from 'crypto';
 
 export const CryptoUtil = {

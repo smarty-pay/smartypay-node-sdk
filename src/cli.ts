@@ -4,6 +4,7 @@
   SMARTy Pay Node SDK
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
+
 import { SmartyPayAPI } from './index';
 
 import type { Currency } from 'smartypay-client-model';
@@ -82,7 +83,7 @@ function printHelp() {
 }
 
 function processPaymentReq(input?: string) {
-  if (input) {
+  if (input || input === '') {
     const curKey = findEmptyPaymentKey();
     if (curKey) {
       setPaymentKey(curKey, input);
@@ -124,9 +125,11 @@ async function createPayment() {
     const api = new SmartyPayAPI(cred);
 
     const result = await api.payments.createPayment({
-      expiresAt: new Date(paymentReq.expiresAt!),
-      amount: paymentReq.amount!,
-      token: paymentReq.token! as Currency,
+      expiresAt: paymentReq.expiresAt ? new Date(paymentReq.expiresAt) : undefined,
+      amount: {
+        value: paymentReq.amount!,
+        currency: paymentReq.token! as Currency,
+      },
       metadata: paymentReq.metadata,
     });
 

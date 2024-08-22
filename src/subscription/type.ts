@@ -3,7 +3,14 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-import type { Subscription, SubscriptionCharge, SubscriptionPlan } from 'smartypay-client-model';
+import type { ApiOpt } from '../common/type';
+import type { Subscription, SubscriptionCharge, SubscriptionPlan, SubscriptionStatus } from 'smartypay-client-model';
+
+export interface SubsApiOpt extends ApiOpt {
+  subscriptions?: {
+    skipStatuses?: SubscriptionStatus[];
+  };
+}
 
 export interface GetPlansResp {
   plans: SubscriptionPlan[];
@@ -28,3 +35,12 @@ export interface CreateSubscriptionReq {
 export interface CreateCustomerTokenReq {
   customerId: string;
 }
+
+export const DefaultSkipStatuses: SubscriptionStatus[] = [
+  'Draft',
+  'Suspended',
+  'Cancelled',
+  'PendingCancel',
+  'Error',
+  'Finished',
+];

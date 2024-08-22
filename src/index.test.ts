@@ -8,8 +8,12 @@ import { SmartyPayAPI } from './index';
 import type { ApiOpt } from './index';
 
 describe('SmartyPayAPI', () => {
+  // test access on stage
+  const PublicKey = 's5FGH1xnRMs6WGPEFX9oIlxYDYEYX4Sg';
+  const SecretKey = 'ltbUjBfqXqwJLf3hToVTTvHho5YRaR3SnL2Dh20x3P3f0A462gmMlUa4pfYq1ScM';
+
   describe('utils', () => {
-    const api = SmartyPayAPI.utils;
+    const { utils } = SmartyPayAPI;
 
     const message = 'test data';
     const secret = 'test key';
@@ -17,24 +21,46 @@ describe('SmartyPayAPI', () => {
     const signature = '4695788ca94015a246422be13bbd966ade571842efc3a39296bdb6f2377597ff';
 
     test('getMessageSignature', () => {
-      expect(api.getMessageSignature(message, secret)).toBe(signature);
-      expect(api.getMessageSignature(`NOT-${message}`, secret)).not.toBe(signature);
-      expect(api.getMessageSignature(message, `NOT-${secret}`)).not.toBe(signature);
+      expect(utils.getMessageSignature(message, secret)).toBe(signature);
+      expect(utils.getMessageSignature(`NOT-${message}`, secret)).not.toBe(signature);
+      expect(utils.getMessageSignature(message, `NOT-${secret}`)).not.toBe(signature);
     });
 
     test('isValidSignature', () => {
-      expect(api.isValidSignature(message, signature, secret)).toBe(true);
-      expect(api.isValidSignature(`NOT-${message}`, signature, secret)).toBe(false);
-      expect(api.isValidSignature(message, `NOT-${signature}`, secret)).toBe(false);
-      expect(api.isValidSignature(message, signature, `NOT-${secret}`)).toBe(false);
+      expect(utils.isValidSignature(message, signature, secret)).toBe(true);
+      expect(utils.isValidSignature(`NOT-${message}`, signature, secret)).toBe(false);
+      expect(utils.isValidSignature(message, `NOT-${signature}`, secret)).toBe(false);
+      expect(utils.isValidSignature(message, signature, `NOT-${secret}`)).toBe(false);
+    });
+  });
+
+  describe('payments', () => {
+    const apiOpt: ApiOpt = {
+      isStaging: true,
+      publicKey: PublicKey,
+      secretKey: SecretKey,
+    };
+
+    const api = new SmartyPayAPI(apiOpt).payments;
+
+    test('createPayment', async () => {
+      const result = await api.createPayment({
+        amount: {
+          value: '1',
+          currency: 'btUSDTv2',
+        },
+      });
+
+      expect(result).not.toBeUndefined();
+      expect(result.status).toBe('Created');
     });
   });
 
   describe('subscriptions', () => {
     const apiOpt: ApiOpt = {
       isStaging: true,
-      publicKey: 's5FGH1xnRMs6WGPEFX9oIlxYDYEYX4Sg',
-      secretKey: 'ltbUjBfqXqwJLf3hToVTTvHho5YRaR3SnL2Dh20x3P3f0A462gmMlUa4pfYq1ScM',
+      publicKey: PublicKey,
+      secretKey: SecretKey,
     };
 
     const api = new SmartyPayAPI(apiOpt).subscriptions;

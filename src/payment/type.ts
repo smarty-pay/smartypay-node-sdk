@@ -3,12 +3,12 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
-import type { Currency, Payment } from 'smartypay-client-model';
+import type { Amount } from '../common/type';
+import type { Payment } from 'smartypay-client-model';
 
 export interface CreatePaymentReq {
-  expiresAt: Date;
-  amount: number | string;
-  token: Currency;
+  amount: Amount;
+  expiresAt?: Date;
   metadata?: string | Record<string, any>;
 }
 
