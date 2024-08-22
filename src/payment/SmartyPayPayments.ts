@@ -3,6 +3,8 @@
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
+import { normalizePayment } from 'smartypay-client-model';
+
 import { postSignReq } from '../common/postSignReq';
 import { OneDayDelta } from '../common/type';
 import { isString } from '../util';
@@ -31,6 +33,6 @@ export class SmartyPayPayments {
 
     const { payment } = await postSignReq<CreatePaymentResp>('/integration/payments', bodyData, this.apiOpt);
 
-    return payment;
+    return normalizePayment(payment);
   }
 }

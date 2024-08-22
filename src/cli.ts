@@ -139,8 +139,6 @@ async function createPayment() {
     console.log('');
   } catch (e: any) {
     state = 'unknown';
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     console.log('Cannot create payment:', e.message, e.body);
     console.log('');
     printHelp();

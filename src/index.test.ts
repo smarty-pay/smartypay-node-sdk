@@ -5,7 +5,9 @@
 
 import { SmartyPayAPI } from './index';
 
-import type { ApiOpt } from './index';
+import type { ApiOpt, CreatePaymentReq } from './index';
+
+const OneHourDelta = 1000 * 60 * 60;
 
 describe('SmartyPayAPI', () => {
   // test access on stage
@@ -44,15 +46,20 @@ describe('SmartyPayAPI', () => {
     const api = new SmartyPayAPI(apiOpt).payments;
 
     test('createPayment', async () => {
-      const result = await api.createPayment({
+      const req: CreatePaymentReq = {
         amount: {
           value: '1',
           currency: 'btUSDTv2',
         },
-      });
+      };
+      const result = await api.createPayment(req);
 
       expect(result).not.toBeUndefined();
       expect(result.status).toBe('Created');
+      expect(result.amount.value).toBe(req.amount.value);
+      expect(result.amount.currency).toBe(req.amount.currency);
+      expect(result.expiresAt > new Date(Date.now() + OneHourDelta)).toBe(true);
+      expect(result.expiresAt < new Date(Date.now() + OneHourDelta * 24 * 30)).toBe(true);
     });
   });
 

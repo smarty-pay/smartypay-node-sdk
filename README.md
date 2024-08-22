@@ -24,10 +24,12 @@ async function createPayment() {
   });
   
   const payment = await api.payments.createPayment({
-    expiresAt: new Date(Date.now() + 1000 * 60 * 60), // after 1 hour from now
-    amount: '1.99',
-    token: 'bUSDT',
-    metadata: 'YOUR_PURCHASE_ID' // optional
+    amount: {
+      value: '1',
+      currency: 'bUSDT',
+    },
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60), // optional: after 1 hour from now
+    metadata: { orderId: 'YOUR_PURCHASE_ID' } // optional: any metadata
   });
   
   // result payment id
@@ -43,12 +45,13 @@ async function createPayment() {
   const urlToRedirect = 'https://checkout.smartypay.io/' + paymentId + '?' + params.toString();
 }
 ```
-- **expiresAt** - date before payment is active
-- **amount** - amount for a payment (example 0.99)
-- **token** - see valid tokens here: https://docs.smartypay.io/general/supported-tokens
-- **metadata** - optional field for any custom metadata (usually it's your own purchase id for success webhook)
-- **secretKey** - you can get it here: https://dashboard.smartypay.io/
-- **publicKey** - you can get it here: https://dashboard.smartypay.io/
+- **amount** - Amount for a payment (value and currency token). See valid tokens here: https://docs.smartypay.io/general/supported-tokens
+- **expiresAt** - Optional: date before payment is active
+- **metadata** - Optional: key-value for any custom metadata (usually it's your own purchase id for success webhook)
+
+Api common config:
+- **secretKey** - You can get it here: https://dashboard.smartypay.io/
+- **publicKey** - You can get it here: https://dashboard.smartypay.io/
 
 
 ### Create client's recharge address
@@ -75,10 +78,12 @@ async function createRechargeAddress(customerId: string) {
   const rechargeAddress = resp.address;
 }
 ```
-- **token** - see valid tokens here: https://docs.smartypay.io/general/supported-tokens
-- **customerId** - customer's id from your own system
-- **secretKey** - you can get it here: https://dashboard.smartypay.io/
-- **publicKey** - you can get it here: https://dashboard.smartypay.io/
+- **token** - See valid tokens here: https://docs.smartypay.io/general/supported-tokens
+- **customerId** - Customer's id from your own system
+
+Api common config:
+- **secretKey** - You can get it here: https://dashboard.smartypay.io/
+- **publicKey** - You can get it here: https://dashboard.smartypay.io/
 
 ### Check webhook signature
 
