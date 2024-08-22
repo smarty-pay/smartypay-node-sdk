@@ -1,5 +1,5 @@
 # SMARTy Pay Node SDK
-Simple library for creating invoices on backend side
+Simple library for creating payments on backend side
 
 ## Installation
 ```shell
@@ -8,14 +8,14 @@ npm i smartypay-node-sdk
 
 ## Usage
 
-### Create invoice
+### Create payment
 
 [See docs](https://docs.smartypay.io/general/authentication#signing-requests)
 
 ```typescript
-import {SmartyPayAPI} from 'smartypay-node-sdk';
+import { SmartyPayAPI } from 'smartypay-node-sdk';
 
-async function createInvoice() {
+async function createPayment() {
   
   // call API 
   const api = new SmartyPayAPI({
@@ -23,35 +23,35 @@ async function createInvoice() {
     publicKey: 'YOUR_API_KEY',
   });
   
-  const invoice = await api.invoices.createInvoice({
-    expiresAt: new Date(Date.now() + 1000 * 60 * 60), // after 1 hour from now
-    amount: '1.99',
-    token: 'bUSDT',
-    metadata: 'YOUR_PURCHASE_ID' // optional
+  const payment = await api.payments.createPayment({
+    amount: {
+      value: '1',
+      currency: 'bUSDT',
+    },
+    expiresAt: new Date(Date.now() + 1000 * 60 * 60), // optional: after 1 hour from now
+    metadata: { orderId: 'YOUR_PURCHASE_ID' } // optional: any metadata
   });
   
-  // result invoice id
-  const invoiceId = invoice.id;
-    
-  // params to open invoice
-  const params = new URLSearchParams();
-  params.set('invoice-id', invoiceId);
-    
+  // result payment id
+  const paymentId = payment.id;
+
   // additional params:
+  const params = new URLSearchParams();
   // params.set('name', 'Item Name to Buy');
   // params.set('success-url', 'https://...');
   // params.set('fail-url', 'https://...');
 
-  // final url be like "https://checkout.smartypay.io/invoice?invoice-id=XXXXXXX"
-  const urlToRedirect = 'https://checkout.smartypay.io/invoice?' + params.toString();
+  // final url be like "https://checkout.smartypay.io/XXXXXXX?..."
+  const urlToRedirect = 'https://checkout.smartypay.io/' + paymentId + '?' + params.toString();
 }
 ```
-- **expiresAt** - date before invoice is active
-- **amount** - amount for invoice (example 0.99)
-- **token** - see valid tokens here: https://docs.smartypay.io/general/supported-tokens
-- **metadata** - optional field for any custom metadata (usually it's your own purchase id for success webhook)
-- **secretKey** - you can get it here: https://dashboard.smartypay.io/
-- **publicKey** - you can get it here: https://dashboard.smartypay.io/
+- **amount** - Amount for a payment (value and currency token). See valid tokens here: https://docs.smartypay.io/general/supported-tokens
+- **expiresAt** - Optional: date before payment is active
+- **metadata** - Optional: key-value for any custom metadata (usually it's your own purchase id for success webhook)
+
+Api common config:
+- **secretKey** - You can get it here: https://dashboard.smartypay.io/
+- **publicKey** - You can get it here: https://dashboard.smartypay.io/
 
 
 ### Create client's recharge address
@@ -78,10 +78,12 @@ async function createRechargeAddress(customerId: string) {
   const rechargeAddress = resp.address;
 }
 ```
-- **token** - see valid tokens here: https://docs.smartypay.io/general/supported-tokens
-- **customerId** - customer's id from your own system
-- **secretKey** - you can get it here: https://dashboard.smartypay.io/
-- **publicKey** - you can get it here: https://dashboard.smartypay.io/
+- **token** - See valid tokens here: https://docs.smartypay.io/general/supported-tokens
+- **customerId** - Customer's id from your own system
+
+Api common config:
+- **secretKey** - You can get it here: https://dashboard.smartypay.io/
+- **publicKey** - You can get it here: https://dashboard.smartypay.io/
 
 ### Check webhook signature
 
