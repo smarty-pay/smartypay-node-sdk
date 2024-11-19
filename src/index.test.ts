@@ -60,7 +60,7 @@ describe('SmartyPayAPI', () => {
       expect(result.amount.currency).toBe(req.amount.currency);
       expect(result.expiresAt > new Date(Date.now() + OneHourDelta)).toBe(true);
       expect(result.expiresAt < new Date(Date.now() + OneHourDelta * 24 * 30)).toBe(true);
-    });
+    }, 15_000);
   });
 
   describe('subscriptions', () => {
@@ -86,7 +86,7 @@ describe('SmartyPayAPI', () => {
       expect(token1).not.toEqual(token2);
       expect(token1).not.toEqual(token3);
       expect(token2).not.toEqual(token3);
-    });
+    }, 15_000);
 
     test('getPlans', async () => {
       const plansInActive = await api.getPlans(['Active']);
