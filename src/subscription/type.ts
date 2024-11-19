@@ -1,5 +1,5 @@
 /*
-  SMARTy Pay Node SDK
+  Smarty Pay Node SDK
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 

@@ -1,4 +1,4 @@
-# SMARTy Pay Node SDK
+# Smarty Pay Node SDK
 Simple library for creating payments on backend side
 
 ## Installation
@@ -59,7 +59,7 @@ Api common config:
 [See docs](https://docs.smartypay.io/api/recharge-payments)
 
 ```typescript
-import {SmartyPayAPI} from 'smartypay-node-sdk';
+import { SmartyPayAPI } from 'smartypay-node-sdk';
 
 async function createRechargeAddress(customerId: string) {
   

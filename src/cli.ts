@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*
-  SMARTy Pay Node SDK
+  Smarty Pay Node SDK
   @author Evgeny Dolganov <evgenij.dolganov@gmail.com>
 */
 
@@ -20,7 +20,7 @@ let state: StateType = 'unknown';
 let paymentReq: Record<PaymentKey, string | undefined>;
 let inProgress = false;
 
-stdout.write('Welcome to SMARTy Pay CLI');
+stdout.write('Welcome to Smarty Pay CLI');
 stdout.write("\nEnter 'help' for see all commands");
 stdout.write(NextLineInput);
 
