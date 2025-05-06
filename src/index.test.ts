@@ -155,7 +155,7 @@ describe('SmartyPayAPI', () => {
         expect(response).not.toBeUndefined();
         expect(response.status).toBe(400);
         expect(response.code).toBe('BadRequest');
-        expect(response.message).toBe('Invalid value for: body');
+        expect(response.message).toBe("Invalid value for: body (Invalid human id 64 format at 'planId')");
       }
     });
   });
